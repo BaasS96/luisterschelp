@@ -7,6 +7,7 @@
         Luisterschelp
     </title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script src='scripts/ocrad.js'></script>
     <script src="scripts/lodash-min.js"></script>
     <script src="scripts/howler-min.js"></script>
     <script src="scripts/functions.js"></script>
@@ -23,6 +24,8 @@
     </div>
     <div id="header">
         <button onclick="initCamera();">camera</button>
+        <button onclick="recognize();">recognize</button>
+        <video id="video" width="640" height="480" autoplay></video>
         <div id="volholder">
             <img src="images/ic_volume_mute_white_48dp.png" id="vollow" />
             <img src="images/ic_volume_down_orange_48dp.png" id="volmid" />

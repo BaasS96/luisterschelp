@@ -4,7 +4,9 @@ function initCamera() {
         video.src = window.URL.createObjectURL(stream);
         video.play();
     });
-    } else {
+} else {
+    
+    
         alert("function not supported");
     }
 }

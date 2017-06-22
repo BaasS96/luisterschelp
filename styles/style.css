@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'School';
+    src: url(SchoolKX_new.ttf);
+}
+html body {
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: School;
+    overflow-x: hidden;
+    background-color: #03A9F4;
+}
+#animationoverlay {
+    z-index: 5;
+    display: block;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    pointer-events: none;
+}
+#letteroverlay {
+    z-index: 6;
+    display: block;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    text-align: center;
+    line-height: 100vh;
+    background-color: #03A9F4;
+    margin-left: -110vw;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    transition: margin-left 0.5s ease;
+}
+#letterholder {
+    vertical-align: middle;
+    color: #000000;
+    padding-bottom: 4vh;
+    margin-right: 0.1em;
+    font-size: 55vmin;
+}
+#letterimg {
+    vertical-align: middle;
+    max-width: 40vmin;
+}
+#header {
+    width: 100vw;
+    height: 2em;
+    display: block;
+    position: fixed;
+    padding: 0.5em;
+    background-color: #0288D1;
+    z-index: 2;
+}
+#volholder {
+    margin-left: auto;
+    margin-right: auto;
+    width: 7em;
+    padding: 0em;
+}
+#volhigh {
+    height: 2em;
+    display: inline-block;
+}
+#volmid {
+    height: 2em;
+    display: inline-block;
+}
+#vollow {
+    height: 2em;
+    display: inline-block;
+}
+#workarea {
+    padding-top: 3em;
+    width: 100vw;
+    background-color: #03A9F4;
+    display: block;
+    position: relative;
+    text-align: center;
+}
+.letter {
+    display: inline-block;
+    position: relative;
+    width: 2em;
+    height: 2em;
+    margin: 0px;
+    font-size: 4em;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 2em;
+    color: #FFFFFF;
+    background-color: #03A9F4;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+.letter:hover {
+    color: #FF9800;
+    background-color: #B3E5FC;
+}
+.letter:focus .letter:active {
+    color: #FFFFFF;
+    background-color: #03A9F4;
+}
+#canvas {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+}

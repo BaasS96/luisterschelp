@@ -24,10 +24,12 @@
         <span id="letterholder">0</span><img src="images/letters/a.png" id="letterimg" />
     </div>
     <div id="cameraoverlay">
-        <video id="videofeed" width="640" height="480" autoplay></video>
+        <video id="video" width="900" height="600" autoplay></video>
+        <canvas id="photocanvas" style="display:none;"></canvas>
+        <img src="">
     </div>
     <div id="header">
-        <button onclick="initCamera();">camera</button>
+        <button onclick="startOverlay();">camera</button>
         <button onclick="recognize();">recognize</button>
         <div id="volholder">
             <img src="images/ic_volume_mute_white_48dp.png" id="vollow" />

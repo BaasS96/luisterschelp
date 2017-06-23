@@ -1,30 +1,36 @@
 var time = 0;
+var canvas, ctx;
 
 function errorCallback(e) {
     console.log("User denied permission to use camera.", e);
     //Reload;
 }
 
-function initCamera(video) {
+function initCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }, function(stream) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
-            video.play();
-        }, errorCallback);
+            video.play();;
+        });
     } else {
         alert("function not supported");
     }
 }
 
 function startOverlay() {
-    var video = document.getElementById("videofeed");
+    canvas = document.getElementById("photocanvas");
+    ctx = canvas.getContext("2d");
     var timer = setInterval(
         function() {
             //ctx.drawImage(video, 0, 0, 320, 240);
         }, 50
     );
-    initCamera(video);
     cameraOverlay();
+    initCamera();
+    $("#video").click(function() {
+        ctx.drawImage(video, 0, 0);
+        document.querySelector("img").src = canvas.toDataURL("image/webp");
+    });
 }
 
 function recognize() {

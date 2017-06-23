@@ -7,6 +7,8 @@
         Luisterschelp
     </title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src='scripts/ocrad.js'></script>
     <script src="scripts/lodash-min.js"></script>
     <script src="scripts/howler-min.js"></script>
     <script src="scripts/functions.js"></script>
@@ -21,8 +23,14 @@
     <div id="letteroverlay">
         <span id="letterholder">0</span><img src="images/letters/a.png" id="letterimg" />
     </div>
+    <div id="cameraoverlay">
+        <video id="video" width="900" height="600" autoplay></video>
+        <canvas id="photocanvas" style="display:none;"></canvas>
+        <img src="">
+    </div>
     <div id="header">
-        <button onclick="initCamera();">camera</button>
+        <button onclick="startOverlay();">camera</button>
+        <button onclick="recognize();">recognize</button>
         <div id="volholder">
             <img src="images/ic_volume_mute_white_48dp.png" id="vollow" />
             <img src="images/ic_volume_down_orange_48dp.png" id="volmid" />

@@ -1,3 +1,5 @@
+var cameraOverlayopen = false;
+
 function letterOverlay(objId) {
     var letterId = objId.id;
     var letterOn = letterId.split("-");

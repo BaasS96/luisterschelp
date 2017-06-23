@@ -17,6 +17,17 @@ function initCamera() {
     }
 }
 
+function cameraOverlay() {
+    var overlay = document.getElementById("cameraoverlay");
+    if (!cameraOverlayopen) {
+        overlay.style.marginLeft = 0;
+        cameraOverlayopen = true;
+    } else {
+        overlay.style.marginLeft = "-310vw";
+        cameraOverlayopen = false;
+    }
+}
+
 function startOverlay() {
     canvas = document.getElementById("photocanvas");
     ctx = canvas.getContext("2d");

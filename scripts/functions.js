@@ -14,14 +14,3 @@ function letterOverlay(objId) {
         document.getElementById("letteroverlay").style.marginLeft = "-110vw";
     }, 2000);
 }
-
-function cameraOverlay() {
-    var overlay = document.getElementById("cameraoverlay");
-    if (!cameraOverlayopen) {
-        overlay.style.marginLeft = 0;
-        cameraOverlayopen = true;
-    } else {
-        overlay.style.marginLeft = "-310vw";
-        cameraOverlayopen = false;
-    }
-}

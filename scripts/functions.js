@@ -1,3 +1,5 @@
+var cameraOverlayopen = false;
+
 function letterOverlay(objId) {
     var letterId = objId.id;
     var letterOn = letterId.split("-");
@@ -11,4 +13,15 @@ function letterOverlay(objId) {
     setTimeout(function() {
         document.getElementById("letteroverlay").style.marginLeft = "-110vw";
     }, 2000);
+}
+
+function cameraOverlay() {
+    var overlay = document.getElementById("cameraoverlay");
+    if (!cameraOverlayopen) {
+        overlay.style.marginLeft = 0;
+        cameraOverlayopen = true;
+    } else {
+        overlay.style.marginLeft = "-310vw";
+        cameraOverlayopen = false;
+    }
 }

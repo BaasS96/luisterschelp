@@ -101,7 +101,7 @@ html body {
     background-color: #03A9F4;
 }
 #canvas {
-    position: absolute;
+    position: fixed;
     z-index: 3;
     pointer-events: none;
 }

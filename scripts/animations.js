@@ -34,11 +34,11 @@ function draw() {
                 bub.popParams;
                 ctx.drawImage(img, bub.x, bub.y, bub.dim, bub.dim);
                 if (bub.dim - 25 === bub.odim) {
-                    var sound = new Howl({
-                        src: ['sound/bubblepop.wav'],
+                    let bubbleSound = new Howl({
+                        src: ['sound/bubblepop.flac', 'sound/bubblepop.mp3'],
                         volume: 0.2
                     });
-                    sound.play();
+                    bubbleSound.play();
                     bubbles.splice(key, 1);
                 }
             }
@@ -119,11 +119,21 @@ function bgSoundFx() {
     setInterval(function() {
         let chance = _.random(5);
         if (chance === 5) {
-            var sound = new Howl({
-                        src: ['sound/wave.flac'],
-                        volume: 0.1
-            });
-            sound.play();
+            let chanceb = _.random(2);
+            if (chanceb === 0) {
+                let waveSound = new Howl({
+                        src: ['sound/wave.flac', 'sound/wave.mp3'],
+                        volume: 0.2
+                });
+                waveSound.play();
+            }
+            if (chanceb === 1) {
+                let gullSound = new Howl({
+                        src: ['sound/seagull.flac', 'sound/seagull.mp3'],
+                        volume: 0.2
+                });
+                gullSound.play();
+            }
         }
     }, 30000);
 }

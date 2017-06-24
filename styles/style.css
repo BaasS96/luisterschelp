@@ -81,6 +81,11 @@ html body {
     display: inline-block;
 }
 
+#openscan {
+    height: 2em;
+    float: left;
+}
+
 #workarea {
     padding-top: 3em;
     width: 100vw;

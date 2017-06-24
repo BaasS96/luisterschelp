@@ -36,6 +36,10 @@ function startOverlay() {
             //ctx.drawImage(video, 0, 0, 320, 240);
         }, 50
     );
+    var video = document.getElementById("video");
+    video.setAttribute("width", w);
+    video.setAttribute("height", h);
+    video.style.display = "inline-block";
     cameraOverlay();
     initCamera();
     $("#video").click(function() {

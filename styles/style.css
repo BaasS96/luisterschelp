@@ -136,13 +136,7 @@ html body {
 }
 
 #video {
-    display: inline-block;
-    position: relative;
-    margin: 0px;
-    font-size: 4em;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 2em;
+    display: none;
     color: #FFFFFF;
-    border: 5px solid #000000
+    border: 5px solid #000000;
 }

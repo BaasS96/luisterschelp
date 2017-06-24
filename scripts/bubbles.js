@@ -6,7 +6,8 @@ var unitsize, wiggleincrement;
 
 function newBubbleAnimator() {
     w = window.innerWidth;
-    let body = document.body, html = document.documentElement;
+    let body = document.body,
+        html = document.documentElement;
     h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
     canvas = document.getElementById("canvas");
     canvas.setAttribute("width", w);

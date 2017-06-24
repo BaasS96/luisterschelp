@@ -121,7 +121,7 @@ html body {
 }
 
 #canvas {
-    position: absolute;
+    position: fixed;
     z-index: 3;
     pointer-events: none;
 }

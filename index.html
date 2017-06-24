@@ -12,13 +12,13 @@
     <script src="scripts/lodash-min.js"></script>
     <script src="scripts/howler-min.js"></script>
     <script src="scripts/functions.js"></script>
-    <script src="scripts/bubbles.js"></script>
+    <script src="scripts/animations.js"></script>
     <script src="scripts/ocr.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preload" as="image" href="/letters" />
 </head>
 
-<body onload="newBubbleAnimator();">
+<body onload="newBubbleAnimator(); bgSoundFx();">
     <img id="bubbleimg" src="images/bubble-2009029.png" style="display:none;">
     <div id="letteroverlay">
         <span id="letterholder">0</span><img src="images/letters/a.png" id="letterimg" />

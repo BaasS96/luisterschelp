@@ -37,7 +37,7 @@ function draw() {
                 if (bub.dim - 25 === bub.odim) {
                     let bubbleSound = new Howl({
                         src: ['sound/bubblepop.flac', 'sound/bubblepop.mp3'],
-                        volume: 0.2
+                        volume: 0.5
                     });
                     bubbleSound.play();
                     bubbles.splice(key, 1);
@@ -126,14 +126,14 @@ function bgSoundFx() {
             if (chanceb === 0) {
                 let waveSound = new Howl({
                     src: ['sound/wave.flac', 'sound/wave.mp3'],
-                    volume: 0.2
+                    volume: 0.3
                 });
                 waveSound.play();
             }
             if (chanceb === 1) {
                 let gullSound = new Howl({
                     src: ['sound/seagull.flac', 'sound/seagull.mp3'],
-                    volume: 0.2
+                    volume: 0.3
                 });
                 gullSound.play();
             }

@@ -51,7 +51,7 @@ html body {
 
 #header {
     width: 100vw;
-    height: 2em;
+    height: 3em;
     display: block;
     position: fixed;
     padding: 0.5em;
@@ -60,34 +60,34 @@ html body {
 }
 
 #volholder {
-    margin-left: auto;
-    margin-right: auto;
-    width: 7em;
+    float: right;
+    width: 10em;
     padding: 0em;
+    margin-right: 2em;
 }
 
 #volhigh {
-    height: 2em;
+    height: 3em;
     display: inline-block;
 }
 
 #volmid {
-    height: 2em;
+    height: 3em;
     display: inline-block;
 }
 
 #vollow {
-    height: 2em;
+    height: 3em;
     display: inline-block;
 }
 
-#openscan {
-    height: 2em;
+#homebttn {
+    height: 3em;
     float: left;
 }
 
 #workarea {
-    padding-top: 3em;
+    padding-top: 4em;
     width: 100vw;
     background-color: #03A9F4;
     display: block;

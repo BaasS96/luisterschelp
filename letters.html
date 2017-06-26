@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Luisterschelp
+    </title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="scripts/ocrad.js"></script>
+    <script src="scripts/lodash-min.js"></script>
+    <script src="scripts/howler-min.js"></script>
+    <script src="scripts/functions.js"></script>
+    <script src="scripts/animations.js"></script>
+    <script src="scripts/ocr.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" as="image" href="/letters" />
+</head>
+
+<body onload="newBubbleAnimator(); bgSoundFx(); setVolumeOnLoad();">
+    <img id="bubbleimg" src="images/bubble-2009029.png" style="display:none;">
+    <div id="letteroverlay">
+        <span id="letterholder">0</span><img src="images/letters/a.png" id="letterimg" />
+    </div>
+    <div id="header">
+        <div id="volholder">
+            <img src="images/ic_volume_mute_white_48dp.png" id="vollow" onclick="setVolume('0.1','vollow');" />
+            <img src="images/ic_volume_down_white_48dp.png" id="volmid" onclick="setVolume('0.6','volmid');" />
+            <img src="images/ic_volume_up_white_48dp.png" id="volhigh" onclick="setVolume('1','volhigh');" />
+        </div>
+        <a href="index.html">
+            <img src="images/ic_home_white_48dp.png" id="homebttn" />
+        </a>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div id="workarea">
+        <div class="letter" id="letter-a" onclick="letterOverlay(this)">a</div>
+        <div class="letter" id="letter-b" onclick="letterOverlay(this)">b</div>
+        <div class="letter" id="letter-c" onclick="letterOverlay(this)">c</div>
+        <div class="letter" id="letter-d" onclick="letterOverlay(this)">d</div>
+        <div class="letter" id="letter-e" onclick="letterOverlay(this)">e</div>
+        <div class="letter" id="letter-f" onclick="letterOverlay(this)">f</div>
+        <div class="letter" id="letter-g" onclick="letterOverlay(this)">g</div>
+        <div class="letter" id="letter-h" onclick="letterOverlay(this)">h</div>
+        <div class="letter" id="letter-i" onclick="letterOverlay(this)">i</div>
+        <div class="letter" id="letter-j" onclick="letterOverlay(this)">j</div>
+        <div class="letter" id="letter-k" onclick="letterOverlay(this)">k</div>
+        <div class="letter" id="letter-l" onclick="letterOverlay(this)">l</div>
+        <div class="letter" id="letter-m" onclick="letterOverlay(this)">m</div>
+        <div class="letter" id="letter-n" onclick="letterOverlay(this)">n</div>
+        <div class="letter" id="letter-o" onclick="letterOverlay(this)">o</div>
+        <div class="letter" id="letter-p" onclick="letterOverlay(this)">p</div>
+        <div class="letter" id="letter-q" onclick="letterOverlay(this)">q</div>
+        <div class="letter" id="letter-r" onclick="letterOverlay(this)">r</div>
+        <div class="letter" id="letter-s" onclick="letterOverlay(this)">s</div>
+        <div class="letter" id="letter-t" onclick="letterOverlay(this)">t</div>
+        <div class="letter" id="letter-u" onclick="letterOverlay(this)">u</div>
+        <div class="letter" id="letter-v" onclick="letterOverlay(this)">v</div>
+        <div class="letter" id="letter-w" onclick="letterOverlay(this)">w</div>
+        <div class="letter" id="letter-x" onclick="letterOverlay(this)">x</div>
+        <div class="letter" id="letter-y" onclick="letterOverlay(this)">y</div>
+        <div class="letter" id="letter-z" onclick="letterOverlay(this)">z</div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'School';
+    src: url(SchoolKX_new.ttf);
+}
+
+html body {
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: School;
+    overflow-x: hidden;
+    background-color: #03A9F4;
+}
+
+#header {
+    width: 100vw;
+    height: 3em;
+    display: block;
+    position: fixed;
+    padding: 0.5em;
+    background-color: #0288D1;
+    z-index: 2;
+}
+
+#volholder {
+    float: right;
+    width: 10em;
+    padding: 0em;
+    margin-right: 2em;
+}
+
+#volhigh {
+    height: 3em;
+    display: inline-block;
+}
+
+#volmid {
+    height: 3em;
+    display: inline-block;
+}
+
+#vollow {
+    height: 3em;
+    display: inline-block;
+}
+
+#openscan {
+    height: 3em;
+    float: left;
+}
+
+#workarea {
+    padding-top: 4em;
+    width: 100vw;
+    background-color: #03A9F4;
+    display: block;
+    position: relative;
+    text-align: center;
+}
+
+.block_menu {
+    width: 90vw;
+    height: 20vh;
+    font-size: 5vw;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 20vh;
+    color: #FFFFFF;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    background-color: #0288D1;
+    transition: background-color 0.2s ease;
+}
+.block_menu:hover {
+    background-color: #448AFF;
+}
+.block_menu_item_img {
+    height: 15vh;
+    margin: 2.5vh;
+    float: left;
+}
+.block_menu_item_text {
+    float: left;
+}

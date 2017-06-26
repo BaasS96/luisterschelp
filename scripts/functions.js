@@ -9,7 +9,7 @@ function letterOverlay(objId) {
     document.getElementById("letteroverlay").style.marginLeft = 0;
     var letterSound = new Howl({
         src: ['sound/letters/' + letter + '.flac', 'sound/letters/' + letter + '.mp3'],
-        volume: lettervolume,
+        volume: 1,
         onend: function() {
             setTimeout(function() {
                 document.getElementById("letteroverlay").style.marginLeft = "-110vw";
@@ -19,15 +19,27 @@ function letterOverlay(objId) {
     letterSound.play();
 }
 
+function setVolumeOnLoad() {
+  let oldVolume = sessionStorage.volume;
+  let oldButton;
+  if (oldVolume === "1") {
+    oldButton = "volhigh";
+  }
+  else if (oldVolume === "0.1") {
+    oldButton = "vollow";
+  }
+  else if (oldVolume === "0.6") {
+    oldButton = "volmid";
+  }
+  setVolume(oldVolume, oldButton);
+}
+
 function setVolume(volume, button) {
-    if (lettervolume === 1) {
-        document.getElementById("volmid").src = "images/ic_volume_down_white_48dp.png";
-    } else if (lettervolume === 0.5) {
-        document.getElementById("vollow").src = "images/ic_volume_mute_white_48dp.png";
-    } else {
-        document.getElementById("volhigh").src = "images/ic_volume_up_white_48dp.png";
-    }
-    lettervolume = volume;
+    document.getElementById("volhigh").src = "images/ic_volume_up_white_48dp.png";
+    document.getElementById("volmid").src = "images/ic_volume_down_white_48dp.png";
+    document.getElementById("vollow").src = "images/ic_volume_mute_white_48dp.png";
+    Howler.volume(volume);
+    sessionStorage.volume = volume;
     let speaker = document.getElementById(button);
     if (button === "vollow") {
         speaker.src = "images/ic_volume_mute_orange_36dp.png";

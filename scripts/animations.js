@@ -6,7 +6,8 @@ var unitsize, wiggleincrement;
 
 function newBubbleAnimator() {
     w = window.innerWidth;
-    let body = document.body, html = document.documentElement;
+    let body = document.body,
+        html = document.documentElement;
     h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
     canvas = document.getElementById("canvas");
     canvas.setAttribute("width", w);
@@ -47,9 +48,11 @@ function draw() {
 }
 
 function randomBubble() {
-    let r = _.random(5);
-    for (var i = 0; i < r; i++) {
-        createBubble();
+    if (document.hasFocus()) {
+        let r = _.random(5);
+        for (var i = 0; i < r; i++) {
+            createBubble();
+        }
     }
 }
 
@@ -122,15 +125,15 @@ function bgSoundFx() {
             let chanceb = _.random(2);
             if (chanceb === 0) {
                 let waveSound = new Howl({
-                        src: ['sound/wave.flac', 'sound/wave.mp3'],
-                        volume: 0.2
+                    src: ['sound/wave.flac', 'sound/wave.mp3'],
+                    volume: 0.2
                 });
                 waveSound.play();
             }
             if (chanceb === 1) {
                 let gullSound = new Howl({
-                        src: ['sound/seagull.flac', 'sound/seagull.mp3'],
-                        volume: 0.2
+                    src: ['sound/seagull.flac', 'sound/seagull.mp3'],
+                    volume: 0.2
                 });
                 gullSound.play();
             }

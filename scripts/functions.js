@@ -1,5 +1,3 @@
-var lettervolume = 1;
-
 function letterOverlay(objId) {
     var letterId = objId.id;
     var letterOn = letterId.split("-");
@@ -30,6 +28,10 @@ function setVolumeOnLoad() {
   }
   else if (oldVolume === "0.6") {
     oldButton = "volmid";
+  }
+  else {
+      oldVolume = "0.6";
+      oldButton = "volmid";
   }
   setVolume(oldVolume, oldButton);
 }

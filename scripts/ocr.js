@@ -32,7 +32,16 @@ function initCamera() {
             video.play();
             canvas.addEventListener('click', function() {
                 photo = true;
-                recognize();
+                Caman(canvas, function() {
+                    //this.contrast(100);
+                    this.saturation(-100);
+                    this.sharpen(50);
+                    this.render();
+                });
+                Caman.Event.listen("renderFinished", function(job) {
+                    alert("done");
+                    recognize();
+                });
             }, false);
             draw(video, 0, 0, cw, ch);
         }).catch(function(err) {
@@ -46,14 +55,8 @@ function initCamera() {
 function recognize() {
     console.log("recognizing...");
     var timer = setInterval(timeri, 1);
-    Tesseract.recognize(ctx)
-        .then(function(result) {
-            console.log(result);
-
-        }).finally(function(d) {
-            photo = false;
-            draw();
-        });
+    var qr = new QCodeDecoder();
+    qr.decodeFrom
 }
 
 function timeri() {
@@ -65,7 +68,7 @@ function draw(v, x, y, w, h) {
         ctx.drawImage(v, x, y, w, h);
         setTimeout(draw, 20, v, x, y, w, h);
     } else {
-        ctx.drawImage(v, x, y, w, h);
+        //ctx.drawImage(v, x, y, w, h);
     }
 }
 var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

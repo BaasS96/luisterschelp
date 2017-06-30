@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 var lettervolume = 1, blobreg = new Map();
 var wperitem, bar, progress= 0;
+=======
+>>>>>>> 9a46100b5b34231c4c1715f9db3092dc3d508055
 function letterOverlay(objId) {
     var letterId = objId.id;
     var letterOn = letterId.split("-");
@@ -31,6 +34,10 @@ function setVolumeOnLoad() {
   }
   else if (oldVolume === "0.6") {
     oldButton = "volmid";
+  }
+  else {
+      oldVolume = "0.6";
+      oldButton = "volmid";
   }
   setVolume(oldVolume, oldButton);
 }

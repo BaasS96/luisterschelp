@@ -32,10 +32,10 @@ function initCamera() {
             video.play();
             canvas.addEventListener('click', function() {
                 photo = true;
-                console.log(ctx.getImageData(0, 0 , cw, ch));
+                console.log(ctx.getImageData(0, 0, cw, ch));
                 let data = threshold(ctx.getImageData(0, 0, cw, ch));
                 console.log(data);
-                ctx.putImageData(data, 0 , 0);
+                ctx.putImageData(data, 0, 0);
                 recognize(data);
             }, false);
             draw(video, 0, 0, cw, ch);
@@ -47,21 +47,25 @@ function initCamera() {
     }
 }
 
+
 function tresholdimage() {
     photo = true;
     let img = document.getElementById("text");
     ctx.drawImage(img, 0, 0, cw, ch);
     let data = threshold(ctx.getImageData(0, 0, cw, ch));
-                console.log(data);
-                ctx.putImageData(data, 0 , 0);
+    console.log(data);
+    ctx.putImageData(data, 0, 0);
 }
 
 function recognize(data) {
     console.log("recognizing...");
     var timer = setInterval(timeri, 1);
     Tesseract.recognize(data)
-    .then(result => console.log(result));
-    alert(string);
+        .then(function(result) {
+            console.log(result);
+            alert(result.text);
+        });
+    //alert(string);
     //photo = false;
 }
 

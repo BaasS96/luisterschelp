@@ -27,8 +27,19 @@ window.onload = function() {
 
 function initCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+        var backcam;
+        navigator.mediaDevices.enumerateDevices().then(function(info) {
+            for (var i = 0; i !== info.length; ++i) {
+                let dinfo = info[i];
+                if (dinfo.kind === "videoinput") {
+                    if (dinfo.label.contains("back")) {
+                        //Found
+                        backcam = dinfo.deviceId;
+                    }
+                }
+            }
+        });
+        navigator.mediaDevices.getUserMedia({ video: { deviceId: backcam, facingMode: "environment" } }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
             video.play();
             canvas.addEventListener('click', function() {

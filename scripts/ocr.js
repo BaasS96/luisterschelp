@@ -32,7 +32,9 @@ function initCamera() {
             for (var i = 0; i !== info.length; ++i) {
                 let dinfo = info[i];
                 if (dinfo.kind === "videoinput") {
-                    if (dinfo.label.contains("back")) {
+                    console.log(dinfo);
+                    let label = dinfo.label;
+                    if (label.indexOf("back") !== -1) {
                         //Found
                         backcam = dinfo.deviceId;
                     }

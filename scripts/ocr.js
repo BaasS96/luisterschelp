@@ -32,16 +32,11 @@ function initCamera() {
             video.play();
             canvas.addEventListener('click', function() {
                 photo = true;
-                Caman(canvas, function() {
-                    //this.contrast(100);
-                    this.saturation(-100);
-                    this.sharpen(50);
-                    this.render();
-                });
-                Caman.Event.listen("renderFinished", function(job) {
-                    alert("done");
-                    recognize();
-                });
+                console.log(ctx.getImageData(0, 0 , cw, ch));
+                let data = threshold(ctx.getImageData(0, 0, cw, ch));
+                console.log(data);
+                ctx.putImageData(data, 0 , 0);
+                recognize(data);
             }, false);
             draw(video, 0, 0, cw, ch);
         }).catch(function(err) {
@@ -52,11 +47,22 @@ function initCamera() {
     }
 }
 
-function recognize() {
+function tresholdimage() {
+    photo = true;
+    let img = document.getElementById("text");
+    ctx.drawImage(img, 0, 0, cw, ch);
+    let data = threshold(ctx.getImageData(0, 0, cw, ch));
+                console.log(data);
+                ctx.putImageData(data, 0 , 0);
+}
+
+function recognize(data) {
     console.log("recognizing...");
     var timer = setInterval(timeri, 1);
-    var qr = new QCodeDecoder();
-    qr.decodeFrom
+    Tesseract.recognize(data)
+    .then(result => console.log(result));
+    alert(string);
+    //photo = false;
 }
 
 function timeri() {
@@ -86,4 +92,71 @@ function getResults() {
     _.forEach(testresult, function(val, key) {
         console.log(key + ": " + val);
     });
+}
+
+//Functions to prepare the image for recognition 
+function threshold(d) {
+    var imageData = d.data;
+    //Treshold the image to get a contrasted image.
+    //First, calculate the histogram
+    let hist = getHistogram(imageData);
+    //Using the histogram, calculate the appropriate treshold to separate the image in back and forground
+    var threshold = otus(hist, imageData.length / 4);
+    console.log(threshold);
+    //Apply the treshold
+    var newIData = imageData;
+    for (var i = 0; i < newIData.length; i += 4) {
+        if (newIData[i] >= threshold) {
+            newIData[i] = 255;
+            newIData[i + 1] = 255;
+            newIData[i + 2] = 255;
+        } else {
+            newIData[i] = 0;
+            newIData[i + 1] = 0;
+            newIData[i + 2] = 0;
+        }
+    }
+    d.data = newIData;
+    return d;
+}
+
+function getHistogram(data) {
+    let histogram = Array(256);
+    for (var i = 0; i < 256; i++) {
+        histogram[i] = 0;
+    }
+    for (var i = 0; i < data.length; i += 4) {
+        let red = data[i];
+        let blue = data[i + 1];
+        let green = data[i + 2];
+        let gray = red * .2126 + green * .07152 + blue * .0722;
+        gray = Math.round(gray);
+        histogram[gray] += 1;
+    }
+    return histogram;
+}
+
+function otus(histData, total) {
+    let sum = 0;
+    for (let t = 0; t < 256; t++) sum += t * histData[t];
+    let sumB = 0;
+    let wB = 0;
+    let wF = 0;
+    let varMax = 0;
+    let threshold = 0;
+    for (let t = 0; t < 256; t++) {
+        wB += histData[t];
+        if (wB == 0) continue;
+        wF = total - wB;
+        if (wF == 0) break;
+        sumB += t * histData[t];
+        let mB = sumB / wB;
+        let mF = (sum - sumB) / wF;
+        let varBetween = wB * wF * (mB - mF) * (mB - mF);
+        if (varBetween > varMax) {
+            varMax = varBetween;
+            threshold = t;
+        }
+    }
+    return threshold;
 }

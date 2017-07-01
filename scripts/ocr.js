@@ -60,11 +60,8 @@ function tresholdimage() {
 function recognize(data) {
     console.log("recognizing...");
     var timer = setInterval(timeri, 1);
-    Tesseract.recognize(data)
-        .then(function(result) {
-            console.log(result);
-            alert(result.text);
-        });
+    var txt = OCRAD(data);
+    console.log(txt);
     //alert(string);
     //photo = false;
 }

@@ -27,7 +27,8 @@ window.onload = function() {
 
 function initCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: { facingmode: "environment" } }).then(function(stream) {
+
+        navigator.mediaDevices.getUserMedia({ video: { facingmode: { exact: "environment" } } }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
             video.play();
             canvas.addEventListener('click', function() {

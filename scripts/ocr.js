@@ -63,7 +63,10 @@ function recognize(data) {
     var txt = OCRAD(data);
     console.log(txt);
     alert(txt);
+<<<<<<< HEAD
     //alert(string);
+=======
+>>>>>>> 497b5dfb4953949adceb40a4b5367b05aeed4f21
     photo = false;
 }
 

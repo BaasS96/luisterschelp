@@ -12,17 +12,10 @@ window.onload = function() {
     let body = document.body,
         html = document.documentElement;
     h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    if (isMobile) {
-        canvas.setAttribute("width", w);
-        canvas.setAttribute("height", h);
-        cw = w;
-        ch = h;
-    } else {
-        canvas.setAttribute("width", 600);
-        canvas.setAttribute("height", 600);
-        cw = 600;
-        ch = 600;
-    }
+    canvas.setAttribute("width", 600);
+    canvas.setAttribute("height", 600);
+    cw = 600;
+    ch = 600;
     initCamera();
 }
 
@@ -44,7 +37,6 @@ function initCamera() {
                 recognize(data);
             }, false);
             draw(video, 0, 0, cw, ch);
-            getBackCamera();
         }).catch(function(err) {
             console.log(err);
         });
@@ -66,9 +58,15 @@ function tresholdimage() {
 function recognize(data) {
     console.log("recognizing...");
     var timer = setInterval(timeri, 1);
-    var txt = OCRAD(data);
-    console.log(txt);
-    alert(txt);
+    var text = OCRAD(data);
+    let conf = confidence(text);
+    if (conf === false) {
+        //Returned false, need to scan again.
+        alert("scan again!");
+    } else {
+        //Further process the answer.
+        alert(conf);
+    }
     //alert(string);
     photo = false;
 }
@@ -168,38 +166,47 @@ function otus(histData, total) {
     }
     return threshold;
 }
-
-function getBackCamera() {
-    navigator.mediaDevices.enumerateDevices().then(function(info) {
-        for (var i = 0; i !== info.length; ++i) {
-            let dinfo = info[i];
-            if (dinfo.kind === "videoinput") {
-                console.log(dinfo);
-                let label = dinfo.label;
-                if (label.indexOf("back") !== -1) {
-                    //Found
-                    backcam = dinfo.deviceId;
-                }
+/**
+ * @param {string} rawtext Raw input text that was recognized
+ */
+function confidence(rawtext) {
+    if (rawtext.length === 0) return false;
+    let answer = "";
+    let charcount = 0;
+    let letters = "",
+        i = 0,
+        abc = "abcdefghijklmnopqrstuvw",
+        exceptioncharacters = "!/\015",
+        charsforI = "!/\1";
+    for (i = 0; i <= rawtext.length; i++) {
+        let char = rawtext.charAt(i).toLowerCase();
+        if (abc.indexOf(char) !== -1) {
+            //The answer contains letter(s)
+            letters += char;
+            continue;
+        }
+        if (exceptioncharacters.indexOf(char) !== -1 && rawtext.length <= 3) {
+            //A letter may have been recognized as a character, but we assume that this is the case if the length of the full string is less than 3
+            if (charsforI.indexOf(char) !== -1) {
+                letters += "i";
+            } else if (char === "0") {
+                letters += "o";
+            } else {
+                letters += "s";
             }
+            continue;
         }
-    });
-    navigator.mediaDevices.getUserMedia({
-        video: {
-            deviceId: { exact: backcam }
+        charcount++;
+    }
+    if (letters.length > 5) {
+        //Too suspicious
+        return false;
+    } else {
+        if (charcount > 5) {
+            //probs not a great guess to return a letter now.
+            return false;
         }
-    }).then(function(stream) {
-        video.src = window.URL.createObjectURL(stream);
-        video.play();
-        canvas.addEventListener('click', function() {
-            photo = true;
-            console.log(ctx.getImageData(0, 0, cw, ch));
-            let data = threshold(ctx.getImageData(0, 0, cw, ch));
-            console.log(data);
-            ctx.putImageData(data, 0, 0);
-            recognize(data);
-        }, false);
-        draw(video, 0, 0, cw, ch);
-    }).catch(function(err) {
-        console.log(err);
-    });
+        answer = letters.charAt(0);
+    }
+    return answer;
 }

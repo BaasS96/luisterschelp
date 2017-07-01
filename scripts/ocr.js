@@ -3,6 +3,7 @@ var canvas, ctx;
 var w, h, cw, ch;
 var photo = false;
 var testresult = [];
+var backcam;
 
 window.onload = function() {
     canvas = document.getElementById("canvas");
@@ -27,21 +28,11 @@ window.onload = function() {
 
 function initCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        var backcam;
-        navigator.mediaDevices.enumerateDevices().then(function(info) {
-            for (var i = 0; i !== info.length; ++i) {
-                let dinfo = info[i];
-                if (dinfo.kind === "videoinput") {
-                    console.log(dinfo);
-                    let label = dinfo.label;
-                    if (label.indexOf("back") !== -1) {
-                        //Found
-                        backcam = dinfo.deviceId;
-                    }
-                }
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                deviceId: { exact: backcam }
             }
-        });
-        navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: backcam }, facingMode: "environment" } }).then(function(stream) {
+        }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
             video.play();
             canvas.addEventListener('click', function() {
@@ -53,6 +44,7 @@ function initCamera() {
                 recognize(data);
             }, false);
             draw(video, 0, 0, cw, ch);
+            getBackCamera();
         }).catch(function(err) {
             console.log(err);
         });
@@ -175,4 +167,39 @@ function otus(histData, total) {
         }
     }
     return threshold;
+}
+
+function getBackCamera() {
+    navigator.mediaDevices.enumerateDevices().then(function(info) {
+        for (var i = 0; i !== info.length; ++i) {
+            let dinfo = info[i];
+            if (dinfo.kind === "videoinput") {
+                console.log(dinfo);
+                let label = dinfo.label;
+                if (label.indexOf("back") !== -1) {
+                    //Found
+                    backcam = dinfo.deviceId;
+                }
+            }
+        }
+    });
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            deviceId: { exact: backcam }
+        }
+    }).then(function(stream) {
+        video.src = window.URL.createObjectURL(stream);
+        video.play();
+        canvas.addEventListener('click', function() {
+            photo = true;
+            console.log(ctx.getImageData(0, 0, cw, ch));
+            let data = threshold(ctx.getImageData(0, 0, cw, ch));
+            console.log(data);
+            ctx.putImageData(data, 0, 0);
+            recognize(data);
+        }, false);
+        draw(video, 0, 0, cw, ch);
+    }).catch(function(err) {
+        console.log(err);
+    });
 }

@@ -63,7 +63,7 @@ function recognize(data) {
     var txt = OCRAD(data);
     console.log(txt);
     //alert(string);
-    //photo = false;
+    photo = false;
 }
 
 function timeri() {

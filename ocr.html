@@ -1,13 +1,27 @@
+<!DOCTYPE html>
 <html>
 
 <head>
     <title>
         Magische Luisterschelp
     </title>
+    <link rel="stylesheet" type="text/css" href="styles/ocr.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <script src='scripts/ocrad.js'></script>
+    <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
+    <script src='scripts/qr.js'></script>
+    <script src="scripts/lodash-min.js"></script>
+    <script src="scripts/ocr.js"></script>
+    <meta name="theme-color" content="#0288D1" />
 </head>
 
 <body>
-
+    <div class="controlholder">
+        <img id="text" src="images/IMG_20170701_115132.jpg"></img>;
+        <input type="file" accept="image/*" capture="camera" />
+        <canvas id="canvas"></canvas>
+        <video id="video" autoplay></video>
+    </div>
 </body>
 
 </html>

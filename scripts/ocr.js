@@ -1,81 +1,141 @@
 var time = 0;
 var canvas, ctx;
+var w, h, cw, ch;
+var photo = false;
+var testresult = [];
 
-function errorCallback(e) {
-    console.log("User denied permission to use camera.", e);
-    //Reload;
+window.onload = function() {
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+    w = window.innerWidth;
+    let body = document.body,
+        html = document.documentElement;
+    h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    if (isMobile) {
+        canvas.setAttribute("width", w);
+        canvas.setAttribute("height", h);
+        cw = w;
+        ch = h;
+    } else {
+        canvas.setAttribute("width", 600);
+        canvas.setAttribute("height", 600);
+        cw = 600;
+        ch = 600;
+    }
+    initCamera();
 }
 
 function initCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+        navigator.mediaDevices.getUserMedia({ video: { facingmode: "environment" } }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
-            video.play();;
+            video.play();
+            canvas.addEventListener('click', function() {
+                photo = true;
+                console.log(ctx.getImageData(0, 0, cw, ch));
+                let data = threshold(ctx.getImageData(0, 0, cw, ch));
+                console.log(data);
+                ctx.putImageData(data, 0, 0);
+                recognize(data);
+            }, false);
+            draw(video, 0, 0, cw, ch);
+        }).catch(function(err) {
+            console.log(err);
         });
     } else {
         alert("function not supported");
     }
 }
 
-function cameraOverlay() {
-    var overlay = document.getElementById("cameraoverlay");
-    if (!cameraOverlayopen) {
-        overlay.style.marginLeft = 0;
-        cameraOverlayopen = true;
-    } else {
-        overlay.style.marginLeft = "-310vw";
-        cameraOverlayopen = false;
-    }
+
+function tresholdimage() {
+    photo = true;
+    let img = document.getElementById("text");
+    ctx.drawImage(img, 0, 0, cw, ch);
+    let data = threshold(ctx.getImageData(0, 0, cw, ch));
+    console.log(data);
+    ctx.putImageData(data, 0, 0);
 }
 
-function startOverlay() {
-    canvas = document.getElementById("photocanvas");
-    ctx = canvas.getContext("2d");
-    var timer = setInterval(
-        function() {
-            //ctx.drawImage(video, 0, 0, 320, 240);
-        }, 50
-    );
-    var video = document.getElementById("video");
-    video.setAttribute("width", w);
-    video.setAttribute("height", h);
-    video.style.display = "inline-block";
-    cameraOverlay();
-    initCamera();
-    $("#video").click(function() {
-        ctx.drawImage(video, 0, 0);
-        document.querySelector("img").src = canvas.toDataURL("image/webp");
-    });
-}
-
-function recognize() {
-    let video = document.getElementById("video");
+function recognize(data) {
     console.log("recognizing...");
     var timer = setInterval(timeri, 1);
-    OCRAD(video, {}, function(text) {
-        clearInterval(timer);
-        console.log("recognized, took " + time + "ms:");
-        time = 0;
-        console.log(text || "(empty)");
-    })
+    Tesseract.recognize(data)
+        .then(function(result) {
+            console.log(result);
+            alert(result.text);
+        });
+    //alert(string);
+    //photo = false;
 }
 
 function timeri() {
     time++;
 }
 
+<<<<<<< HEAD
 //Functions to prepare the image for recognition 
 function treshold(imageData) {
+=======
+function draw(v, x, y, w, h) {
+    if (!photo) {
+        ctx.drawImage(v, x, y, w, h);
+        setTimeout(draw, 20, v, x, y, w, h);
+    } else {
+        //ctx.drawImage(v, x, y, w, h);
+    }
+}
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+function getResults() {
+    var negative = 0;
+    _.forEach(testresult, function(val, key) {
+        if (val > 1) {
+            negative++;
+        } else {
+            testresult.splice(key);
+        }
+    });
+    console.log(negative + " of " + testresult.length + " run tests were invalid:");
+    _.forEach(testresult, function(val, key) {
+        console.log(key + ": " + val);
+    });
+}
+
+//Functions to prepare the image for recognition 
+function threshold(d) {
+    var imageData = d.data;
+>>>>>>> c9765443383bb1bce284524b6eebd9313552ddfb
     //Treshold the image to get a contrasted image.
     //First, calculate the histogram
     let hist = getHistogram(imageData);
     //Using the histogram, calculate the appropriate treshold to separate the image in back and forground
+<<<<<<< HEAD
     var treshold = otus(hist, imageData.length / 4);
     //Apply the treshold
     for (var i = 0; i < data.length; i += 4) {
         imageData[i] = imageData[i + 1] = imagedata[i + 2] = imagedata[i] >= threshold ? 255 : 0;
     }
     return imageData;
+=======
+    var threshold = otus(hist, imageData.length / 4);
+    console.log(threshold);
+    //Apply the treshold
+    var newIData = imageData;
+    for (var i = 0; i < newIData.length; i += 4) {
+        if (newIData[i] >= threshold) {
+            newIData[i] = 255;
+            newIData[i + 1] = 255;
+            newIData[i + 2] = 255;
+        } else {
+            newIData[i] = 0;
+            newIData[i + 1] = 0;
+            newIData[i + 2] = 0;
+        }
+    }
+    d.data = newIData;
+    return d;
+>>>>>>> c9765443383bb1bce284524b6eebd9313552ddfb
 }
 
 function getHistogram(data) {

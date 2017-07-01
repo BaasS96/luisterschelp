@@ -73,10 +73,6 @@ function timeri() {
     time++;
 }
 
-<<<<<<< HEAD
-//Functions to prepare the image for recognition 
-function treshold(imageData) {
-=======
 function draw(v, x, y, w, h) {
     if (!photo) {
         ctx.drawImage(v, x, y, w, h);
@@ -105,19 +101,10 @@ function getResults() {
 //Functions to prepare the image for recognition 
 function threshold(d) {
     var imageData = d.data;
->>>>>>> c9765443383bb1bce284524b6eebd9313552ddfb
     //Treshold the image to get a contrasted image.
     //First, calculate the histogram
     let hist = getHistogram(imageData);
     //Using the histogram, calculate the appropriate treshold to separate the image in back and forground
-<<<<<<< HEAD
-    var treshold = otus(hist, imageData.length / 4);
-    //Apply the treshold
-    for (var i = 0; i < data.length; i += 4) {
-        imageData[i] = imageData[i + 1] = imagedata[i + 2] = imagedata[i] >= threshold ? 255 : 0;
-    }
-    return imageData;
-=======
     var threshold = otus(hist, imageData.length / 4);
     console.log(threshold);
     //Apply the treshold
@@ -135,7 +122,6 @@ function threshold(d) {
     }
     d.data = newIData;
     return d;
->>>>>>> c9765443383bb1bce284524b6eebd9313552ddfb
 }
 
 function getHistogram(data) {

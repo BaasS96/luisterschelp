@@ -62,7 +62,7 @@ function recognize(data) {
     var timer = setInterval(timeri, 1);
     var txt = OCRAD(data);
     console.log(txt);
-    //alert(string);
+    alert(txt);
     photo = false;
 }
 

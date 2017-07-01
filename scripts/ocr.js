@@ -41,7 +41,7 @@ function initCamera() {
                 }
             }
         });
-        navigator.mediaDevices.getUserMedia({ video: { deviceId: backcam, facingMode: "environment" } }).then(function(stream) {
+        navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: backcam }, facingMode: "environment" } }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
             video.play();
             canvas.addEventListener('click', function() {

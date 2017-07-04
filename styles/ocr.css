@@ -3,7 +3,8 @@
     src: url(SchoolKX_new.ttf);
 }
 
-html body {
+html,
+body {
     height: 100%;
     width: 100%;
     padding: 0px;
@@ -21,7 +22,6 @@ html body {
     margin: auto;
     position: absolute;
     border: 5px solid red;
-    transform: scaleY(-1);
 }
 
 #video {

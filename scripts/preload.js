@@ -5,7 +5,7 @@ var blobreg = new Map();
 var text;
 
 function preload() {
-    setInterval(checkProgress, 500);
+    setInterval(checkProgress, 10);
     loadLetterSounds();
     loadMiscSounds();
     loadLetterImages();

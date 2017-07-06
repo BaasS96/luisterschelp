@@ -16,18 +16,19 @@ class OCRResult {
     }
 }
 
-var ctx;
+var ctx, drawImage;
 
 class OCR {
-
+    
     init(onrecognized) {
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
         ctx = this.ctx;
+        drawImage = this.drawImage;
         console.log(this.ctx);
         this.w = window.innerWidth;
         let body = document.body,
-            html = document.documentElement;
+        html = document.documentElement;
         this.h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
         if (this.w < this.h) {
             canvas.setAttribute("width", this.w * 0.7);
@@ -45,20 +46,20 @@ class OCR {
             if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
                 //We're dealing with mobile firefox here, or on linux but nobody uses that.
                 //this.canvas.style.transform = "scaleY(-1)";
+                ctx.translate(0, this.ch);
+                ctx.scale(1, -1);
             }
         }
         this.photo = false;
         this.backcam = undefined;
         this.onrecognized = onrecognized;
     }
-
+    
     initCamera() {
         var t = this;
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({
-                video: {
-                    deviceId: { exact: this.backcam }
-                }
+                video: true
             }).then(function(stream) {
                 t.videostream = stream;
                 video.src = window.URL.createObjectURL(stream);
@@ -72,8 +73,8 @@ class OCR {
             alert("function not supported");
         }
     }
-
-
+    
+    
     tresholdimage() {
         this.photo = true;
         let img = document.getElementById("text");
@@ -82,7 +83,7 @@ class OCR {
         console.log(data);
         this.ctx.putImageData(data, 0, 0);
     }
-
+    
     recognize() {
         console.log("recognizing...");
         this.photo = true;
@@ -101,17 +102,15 @@ class OCR {
         }, 1000);
         //this.photo = false;
     }
-
-    draw(v, x, y, w, h, c) { 
+    
+    draw(v, x, y, w, h, c) {
         if (!this.photo) {
-            ctx.scale(1, -1);
             ctx.drawImage(v, x, y, w, h);
-            ctx.save();
         } else {
             //ctx.drawImage(v, x, y, w, h);
         }
     }
-
+    
     //Functions to prepare the image for recognition 
     threshold(d) {
         var imageData = d.data;
@@ -137,7 +136,7 @@ class OCR {
         d.data.set(newIData);
         return d;
     }
-
+    
     getHistogram(data) {
         let histogram = Array(256);
         for (var i = 0; i < 256; i++) {
@@ -153,43 +152,43 @@ class OCR {
         }
         return histogram;
     }
-
+    
     otus(histData, total) {
-            let sum = 0;
-            for (let t = 0; t < 256; t++) sum += t * histData[t];
-            let sumB = 0;
-            let wB = 0;
-            let wF = 0;
-            let varMax = 0;
-            let threshold = 0;
-            for (let t = 0; t < 256; t++) {
-                wB += histData[t];
-                if (wB == 0) continue;
-                wF = total - wB;
-                if (wF == 0) break;
-                sumB += t * histData[t];
-                let mB = sumB / wB;
-                let mF = (sum - sumB) / wF;
-                let varBetween = wB * wF * (mB - mF) * (mB - mF);
-                if (varBetween > varMax) {
-                    varMax = varBetween;
-                    threshold = t;
-                }
+        let sum = 0;
+        for (let t = 0; t < 256; t++) sum += t * histData[t];
+        let sumB = 0;
+        let wB = 0;
+        let wF = 0;
+        let varMax = 0;
+        let threshold = 0;
+        for (let t = 0; t < 256; t++) {
+            wB += histData[t];
+            if (wB == 0) continue;
+            wF = total - wB;
+            if (wF == 0) break;
+            sumB += t * histData[t];
+            let mB = sumB / wB;
+            let mF = (sum - sumB) / wF;
+            let varBetween = wB * wF * (mB - mF) * (mB - mF);
+            if (varBetween > varMax) {
+                varMax = varBetween;
+                threshold = t;
             }
-            return threshold;
         }
-        /**
-         * @param {string} rawtext Raw input text that was recognized
-         */
+        return threshold;
+    }
+    /**
+    * @param {string} rawtext Raw input text that was recognized
+    */
     confidence(rawtext) {
         if (rawtext.length === 0) {return false;}
         let answer = "";
         let charcount = 0;
         let letters = "",
-            i = 0,
-            abc = "abcdefghijklmnopqrstuvwxyz",
-            exceptioncharacters = "!\/\\015",
-            charsforI = "!\/\\1";
+        i = 0,
+        abc = "abcdefghijklmnopqrstuvwxyz",
+        exceptioncharacters = "!\/\\015",
+        charsforI = "!\/\\1";
         for (i = 0; i <= rawtext.length; i++) {
             let char = rawtext.charAt(i).toLowerCase();
             if (abc.indexOf(char) !== -1) {

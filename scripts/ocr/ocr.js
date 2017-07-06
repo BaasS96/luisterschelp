@@ -216,7 +216,7 @@ class OCR {
                 //probs not a great guess to return a letter now.
                 return false;
             }
-            answer = letters.charAt(0);
+            answer = this.word ? letters : letters.charAt(0);
         }
         return answer;
     }

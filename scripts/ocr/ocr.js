@@ -31,14 +31,14 @@ class OCR {
         html = document.documentElement;
         this.h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
         if (this.w < this.h) {
-            canvas.setAttribute("width", this.w * 0.7);
-            canvas.setAttribute("height", this.w * 0.7);
+            this.canvas.setAttribute("width", this.w * 0.7);
+            this.canvas.setAttribute("height", this.w * 0.7);
             this.cw = this.w * 0.7;
             this.ch = this.w * 0.7;
         }
         else {
-            canvas.setAttribute("width", this.h * 0.7);
-            canvas.setAttribute("height", this.h * 0.7);
+            this.canvas.setAttribute("width", this.h * 0.7);
+            this.canvas.setAttribute("height", this.h * 0.7);
             this.cw = this.h * 0.7;
             this.ch = this.h * 0.7;
         }

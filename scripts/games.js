@@ -457,13 +457,13 @@ function gameWoordStep4(result) {
             }, 900 * i)
         }
     } 
-    alert(result + "/" + woord);
+    //alert(result + "/" + woord);
     console.log(result + "/" + woord);
 }
 function gameWoordStep5(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step5").style.display = "block";
-    alert(result + "/" + woord);
+    //alert(result + "/" + woord);
     console.log(result + "/" + woord);
 }
 function gameWoordStep6(result) {
@@ -507,7 +507,7 @@ function gameWoordStep6(result) {
             }, 900 * i)
         }
     }
-    alert(result + "/" + woord);
+    //alert(result + "/" + woord);
     console.log(result + "/" + woord);
 }
 function gameWoordStep0() {

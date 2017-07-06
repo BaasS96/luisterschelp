@@ -3,15 +3,20 @@ var ocr;
 
 function load(successCallback, failedCallback) {
     ocr = new OCR();
-    ocr.init();
+    ocr.init(recognized, successCallback, failedCallback);
     ocr.initCamera();
-    ocr.addEventListener('recognized', function(e) {
-        if (e.result.hasFailed()) {
+}
+
+function recognized(res, successCallback, failedCallback) {
+            if (res.hasFailed()) {
             failedCallback();
         } else {
             successCallback(e);
         }
-    }, false);
+}
+
+function fail() {
+    alert('fail');
 }
 
 function load_1() {

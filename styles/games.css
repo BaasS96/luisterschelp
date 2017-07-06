@@ -1,0 +1,52 @@
+.controlholder {
+    display: none;
+}
+
+.feedback {
+    height: calc(100% - 6em);
+    width: 100%;
+    display: block;
+    justify-content: center;
+    align-content: center;
+    margin-top: 1em;
+    position: relative;
+}
+.feedback_IMG {
+    max-height: 70vh;
+    max-width: 80vw;
+}
+.feedback_text {
+    display: block;
+    font-size: 4em;
+    color: #FFFFFF;
+}
+.action_button {
+    width: 46vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    height: auto;
+    background-color: #0288D1;
+    border: none;
+    float: left;
+}
+.action_button_IMG {
+    max-width: 30vw;
+    max-height: 15vh;
+}
+#footer {
+    width: 100vw;
+    height: 2em;
+    display: block;
+    position: fixed;
+    background-color: #0288D1;
+    z-index: 2;
+    bottom: 0;
+}
+#progressbar {
+    width: 0%;
+    height: 100%;
+    background-color: #FF9800;
+    transition: width 0.5s ease;
+}

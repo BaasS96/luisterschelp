@@ -18,7 +18,7 @@ class OCRResult {
 
 class OCR {
 
-    init() {
+    init(onrecognized) {
         this.canvas = document.getElementById("canvas");
         this.ctx = canvas.getContext("2d");
         this.w = window.innerWidth;
@@ -35,6 +35,7 @@ class OCR {
         }
         this.photo = false;
         this.backcam = undefined;
+        this.onrecognized = onrecognized;
     }
 
     initCamera() {
@@ -75,8 +76,7 @@ class OCR {
         var text = OCRAD(data);
         let conf = this.confidence(text);
         let res = new OCRResult(conf);
-        let e = new CustomEvent('recognized', { 'result': res });
-        this.dispatchEvent(e);
+        this.onrecognized(res);
         //alert(string);
         this.photo = false;
     }

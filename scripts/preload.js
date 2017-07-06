@@ -5,16 +5,21 @@ var blobreg = new Map();
 var text;
 
 function preload() {
-    setInterval(checkProgress, 10);
-    loadLetterSounds();
-    loadMiscSounds();
-    loadLetterImages();
-    loadMiscImages();
-    text = document.getElementById("text");
+    if (localStorage.blobreg === undefined) {
+        setInterval(checkProgress, 10);
+        loadLetterSounds();
+        loadMiscSounds();
+        loadLetterImages();
+        loadMiscImages();
+        text = document.getElementById("text");
+    } else {
+        blobreg = localStorage.blobreg;
+    }
 }
 
 function checkProgress() {
     if (done === totalfiles) {
+        localStorage.blobreg = blobreg;
         text.innerHTML = "DONE!";
     } else {
         text.innerHTML = done + "/" + totalfiles;

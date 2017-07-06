@@ -41,9 +41,11 @@ class OCR {
             this.cw = this.h * 0.7;
             this.ch = this.h * 0.7;
         }
-        if (navigator.userAgent.includes("Linux") && navigator.userAgent.includes("Gecko")) {
-            //We're dealing with mobile firefox here, or on linux but nobody uses that.
-            this.canvas.style.transform = "scaleY(-1)";
+        if (navigator.userAgent.includes("Gecko")) {
+            if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
+                //We're dealing with mobile firefox here, or on linux but nobody uses that.
+                this.canvas.style.transform = "scaleY(-1)";
+            }
         }
         this.photo = false;
         this.backcam = undefined;

@@ -1,5 +1,8 @@
 var lettervolume = 1;
 
+const abc = "abcdefghijklmnopqrstuvwxyz";
+var blobreg = new Map();
+
 function letterOverlay(objId) {
     var letterId = objId.id;
     var letterOn = letterId.split("-");
@@ -61,4 +64,16 @@ function getWordList() {
         let index = _.random(words.length - 1);
         let word = words[index];
     });
+}
+function preload() {
+    for (var i = 0; i < abc.length; i++) {
+        let letter = abc.charAt(i);
+        fetch('sound/letters/' + letter + ".mp3")
+            .then(function(res) {
+                return res.blob();
+            })
+            .then(function(blob) {
+                blobreg.set(letter + ".mp3", URL.createObjectURL(blob));
+            });
+    }
 }

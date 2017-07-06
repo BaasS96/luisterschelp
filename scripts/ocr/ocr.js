@@ -19,6 +19,10 @@ class OCRResult {
 var ctx, drawImage;
 
 class OCR {
+
+    constructor(word) {
+        this.word = word;
+    }
     
     init(onrecognized) {
         this.canvas = document.getElementById("canvas");
@@ -204,7 +208,7 @@ class OCR {
             }
             charcount++;
         }
-        if (letters.length > 5) {
+        if (letters.length > 5 && !this.word) {
             //Too suspicious
             return false;
         } else {

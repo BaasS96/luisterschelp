@@ -50,3 +50,13 @@ function setVolume(volume, button) {
         speaker.src = "images/ic_volume_up_orange_48dp.png";
     }
 }
+
+function getWordList() {
+    fetch('data/words.json')
+    .then(function(res) {
+        return res.json();
+    })
+    .then(function(json) {
+        
+    });
+}

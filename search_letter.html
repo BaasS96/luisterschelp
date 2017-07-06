@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Magische Luisterschelp
+    </title>
+    <link rel="stylesheet" type="text/css" href="styles/ocr.css">
+    <link rel="stylesheet" type="text/css" href="styles/search_letter.css">
+    <script src='scripts/ocr/ocrad.js'></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="scripts/lodash-min.js"></script>
+    <script src="scripts/howler-min.js"></script>
+    <script src="scripts/ocr/ocr.js"></script>
+    <script src="scripts/ocr/ocr_common.js"></script>
+    <meta name="theme-color" content="#0288D1" />
+</head>
+
+<body onload="load(c,c);">
+    <div id="sound" class="sound">
+        <img src="images/ic_volume_up_white_48dp.png">
+    </div>
+    <div id="controlholder" class="controlholder">
+        <canvas id="canvas"></canvas>
+        <video id="video" autoplay></video>
+        <span id="transcript"></span>
+    </div>
+</body>
+
+</html>

@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 //Common code for all ocr based modes
 var ocr;
 
@@ -41,3 +43,4 @@ function load_1() {
 function checkAnswer() {
 
 }
+>>>>>>> master

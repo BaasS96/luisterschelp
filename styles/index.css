@@ -61,15 +61,16 @@ html, body {
 
 .block_menu {
     width: 90vw;
-    height: 20vh;
-    font-size: 5vw;
+    height: 18vh;
+    font-size: 4.5vw;
     text-align: left;
     vertical-align: middle;
-    line-height: 20vh;
+    line-height: 17vh;
     color: #FFFFFF;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5vh;
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
     background-color: #0288D1;
     transition: background-color 0.2s ease;
 }
@@ -77,7 +78,7 @@ html, body {
     background-color: #448AFF;
 }
 .block_menu_item_img {
-    height: 15vh;
+    height: 13vh;
     margin: 2.5vh;
     float: left;
 }

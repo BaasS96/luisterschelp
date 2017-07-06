@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Magische Luisterschelp
+    </title>
+    <link rel="stylesheet" type="text/css" href="styles/ocr.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/games.css">
+    <script src="scripts/ocr/ocrad.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="scripts/lodash-min.js"></script>
+    <script src="scripts/howler-min.js"></script>
+    <script src="scripts/ocr/ocr.js"></script>
+    <script src="scripts/ocr/ocr_common.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0288D1" />
+</head>
+<!-- onload="load(load_1, fail);" !-->
+<body>
+    <div id="header">
+        <a href="index.html">
+            <img src="images/ic_home_white_48dp.png" id="homebttn" />
+        </a>
+        <div id="volholder">
+            <img src="images/ic_volume_mute_white_48dp.png" id="vollow" />
+            <img src="images/ic_volume_down_orange_48dp.png" id="volmid" />
+            <img src="images/ic_volume_up_white_48dp.png" id="volhigh" />
+        </div>
+    </div>
+    <div id="workarea">
+        <div id="sound" class="feedback">
+            <img src="images/ic_hearing_white_48dp.png" class="feedback_IMG">
+            <span class="feedback_text">luister</span>
+            <button type="button" class="action_button"><img src="images/ic_autorenew_white_48dp" class="action_button_IMG" /></button>
+            <button type="button" class="action_button"><img src="images/ic_arrow_forward_white_48dp" class="action_button_IMG" /></button>
+        </div>
+        <div id="controlholder" class="controlholder">
+            <canvas id="canvas"></canvas>
+            <video id="video" autoplay></video>
+            <span id="transcript"></span>
+        </div>
+    </div>
+    <div id="footer">
+        <div id="progressbar">
+            &nbsp;
+        </div>
+    </div>
+</body>
+
+</html>

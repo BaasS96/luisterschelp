@@ -95,12 +95,7 @@ class OCR {
         let conf = this.confidence(text);
         let res = new OCRResult(conf);
         this.onrecognized(res);
-        //alert(string);
-        //this.canvas.style.transform = "scaleY(-1)";
-        setTimeout(function() {
-            //this.photo = false;
-        }, 1000);
-        //this.photo = false;
+        this.photo = false;
     }
     
     draw(v, x, y, w, h, c) {

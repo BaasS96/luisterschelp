@@ -45,8 +45,6 @@ class OCR {
             if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
                 //We're dealing with mobile firefox here, or on linux but nobody uses that.
                 this.canvas.style.transform = "scaleY(-1)";
-                this.ctx.transform(-1, 0, 0, 0, 0, 0);
-                this.ctx.save();
             }
         }
         this.photo = false;
@@ -102,6 +100,7 @@ class OCR {
 
     draw(v, x, y, w, h, c) { 
         if (!this.photo) {
+            ctx.scale(-1, 1);
             ctx.drawImage(v, x, y, w, h);
         } else {
             //ctx.drawImage(v, x, y, w, h);

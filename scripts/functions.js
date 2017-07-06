@@ -57,6 +57,8 @@ function getWordList() {
         return res.json();
     })
     .then(function(json) {
-        
+        var words = json.words;
+        let index = _.random(words.length - 1);
+        let word = words[index];
     });
 }

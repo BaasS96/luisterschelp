@@ -44,7 +44,7 @@ class OCR {
         if (navigator.userAgent.includes("Gecko")) {
             if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
                 //We're dealing with mobile firefox here, or on linux but nobody uses that.
-                this.canvas.style.transform = "scaleY(-1)";
+                //this.canvas.style.transform = "scaleY(-1)";
             }
         }
         this.photo = false;
@@ -95,13 +95,18 @@ class OCR {
         let res = new OCRResult(conf);
         this.onrecognized(res);
         //alert(string);
-        this.photo = false;
+        //this.canvas.style.transform = "scaleY(-1)";
+        setTimeout(function() {
+            //this.photo = false;
+        }, 1000);
+        //this.photo = false;
     }
 
     draw(v, x, y, w, h, c) { 
         if (!this.photo) {
-            ctx.scale(-1, 1);
+            ctx.scale(1, -1);
             ctx.drawImage(v, x, y, w, h);
+            ctx.save();
         } else {
             //ctx.drawImage(v, x, y, w, h);
         }
@@ -177,7 +182,7 @@ class OCR {
          * @param {string} rawtext Raw input text that was recognized
          */
     confidence(rawtext) {
-        if (rawtext.length === 0) return false;
+        if (rawtext.length === 0) {return false;}
         let answer = "";
         let charcount = 0;
         let letters = "",

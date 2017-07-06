@@ -3,6 +3,8 @@ var ocr;
 //functions for LETTER GAME
 function gameLetterStep2() {
     document.getElementById("step1").style.display = "none";
+    document.getElementById("step3").style.display = "none";
+    document.getElementById("step5").style.display = "none";
     document.getElementById("step2").style.display = "block";
     document.getElementById("progressbar").style.width = "33%";
     if (letter) {
@@ -27,17 +29,17 @@ function gameLetterStep3() {
         else {
             let result = res.getResult();
             if (result === letter) {
-                ocr.videostream.getTracks()[0].stop();
-                gameLetterStep4(result);
+                //ocr.videostream.getTracks()[0].stop();
+                //gameLetterStep4(result);
             }
             else {
-                gameLetterStep5(result);
+                //gameLetterStep5(result);
             }
         }
     }
     ocr.init(func);
     ocr.initCamera();
-    alert(navigator.userAgent);
+    //alert(navigator.userAgent);
 }
 function gameLetterControl() {
     ocr.photo = true;
@@ -47,7 +49,6 @@ function gameLetterStep4(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step4").style.display = "block";
     document.getElementById("progressbar").style.width = "100%";
-    document.getElementById("step4_letter_show").innerHTML = result + "/" + letter;
     document.getElementById("letterholder").innerHTML = letter;
     document.getElementById("letterimg").src = "images/letters/" + letter + ".png";
     document.getElementById("letteroverlay").style.marginLeft = 0;

@@ -11,7 +11,7 @@
     position: relative;
 }
 .feedback_IMG {
-    max-height: 70vh;
+    max-height: 40vh;
     max-width: 80vw;
 }
 .feedback_text {
@@ -70,6 +70,9 @@
     display: none;
 }
 #step4 {
+    display: none;
+}
+#step5 {
     display: none;
 }
 #canvas {

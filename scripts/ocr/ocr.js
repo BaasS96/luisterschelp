@@ -61,6 +61,7 @@ class OCR {
                     deviceId: { exact: this.backcam }
                 }
             }).then(function(stream) {
+                this.videostream = stream;
                 video.src = window.URL.createObjectURL(stream);
                 video.play();
                 setInterval(t.draw, 20, video, 0, 0, t.cw, t.ch, t.ctx);

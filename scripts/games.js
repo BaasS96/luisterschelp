@@ -27,10 +27,11 @@ function gameLetterStep3() {
         else {
             let result = res.getResult();
             if (result === letter) {
-                //step 5
+                ocr.videostream.getTracks()[0].stop();
+                gameLetterStep4();
             }
             else {
-                //step 4
+                gameLetterStep5();
             }
         }
     }
@@ -41,4 +42,17 @@ function gameLetterStep3() {
 function gameLetterControl() {
     ocr.photo = true;
     ocr.recognize();
+}
+function gameLetterStep4() {
+    document.getElementById("step3").style.display = "none";
+    document.getElementById("step4").style.display = "block";
+    document.getElementById("progressbar").style.width = "100%";
+    document.getElementById("letteroverlay").style.marginLeft = 0;
+    setTimeout(function() {
+       document.getElementById("letteroverlay").style.marginLeft = "-110vw";
+    }, 750);
+}
+function gameLetterStep5() {
+    document.getElementById("step3").style.display = "none";
+    document.getElementById("step4").style.display = "block";
 }

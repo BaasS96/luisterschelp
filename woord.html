@@ -1,62 +1,91 @@
 <!DOCTYPE html>
-<html manifest="example.appcache">
+<html>
 
 <head>
-    <meta charset="UTF-8">
     <title>
-        Luisterschelp
+        Luisterschelp - Maak het woord
     </title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/games.css">
+    <script src="scripts/ocr/ocrad.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="scripts/lodash-min.js"></script>
-    <script src="scripts/howler-min.js"></script>
     <script src="scripts/functions.js"></script>
+    <script src="scripts/howler-min.js"></script>
+    <script src="scripts/ocr/ocr.js"></script>
+    <script src="scripts/games.js"></script>
     <script src="scripts/animations.js"></script>
-    <script src="scripts/ocr.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preload" as="image" href="/letters" />
+    <meta name="theme-color" content="#0288D1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
-
-<body onload="newBubbleAnimator(); bgSoundFx();">
-    <img id="bubbleimg" src="images/bubble-2009029.png" style="display:none;">
+<body onload="setVolumeOnLoad(); bgSoundFx(); preload();">
     <div id="letteroverlay">
-        <span id="letterholder">0</span><img src="images/letters/a.png" id="letterimg" />
+        <span id="woordholder">0</span>
     </div>
     <div id="header">
-        <button onclick="initCamera();">camera</button>
+        <a href="index.html">
+            <img src="images/ic_home_gray_48dp.png" id="homebttn" />
+        </a>
         <div id="volholder">
-            <img src="images/ic_volume_mute_white_48dp.png" id="vollow" />
-            <img src="images/ic_volume_down_orange_48dp.png" id="volmid" />
-            <img src="images/ic_volume_up_white_48dp.png" id="volhigh" />
+            <img src="images/ic_volume_mute_white_48dp.png" id="vollow" onclick="setVolume('0.1','vollow');" />
+            <img src="images/ic_volume_down_white_48dp.png" id="volmid" onclick="setVolume('0.6','volmid');" />
+            <img src="images/ic_volume_up_white_48dp.png" id="volhigh" onclick="setVolume('1','volhigh');" />
         </div>
     </div>
-    <canvas id="canvas"></canvas>
     <div id="workarea">
-        <div class="letter" id="letter-a" onclick="letterOverlay(this)">a</div>
-        <div class="letter" id="letter-b" onclick="letterOverlay(this)">b</div>
-        <div class="letter" id="letter-c" onclick="letterOverlay(this)">c</div>
-        <div class="letter" id="letter-d" onclick="letterOverlay(this)">d</div>
-        <div class="letter" id="letter-e" onclick="letterOverlay(this)">e</div>
-        <div class="letter" id="letter-f" onclick="letterOverlay(this)">f</div>
-        <div class="letter" id="letter-g" onclick="letterOverlay(this)">g</div>
-        <div class="letter" id="letter-h" onclick="letterOverlay(this)">h</div>
-        <div class="letter" id="letter-i" onclick="letterOverlay(this)">i</div>
-        <div class="letter" id="letter-j" onclick="letterOverlay(this)">j</div>
-        <div class="letter" id="letter-k" onclick="letterOverlay(this)">k</div>
-        <div class="letter" id="letter-l" onclick="letterOverlay(this)">l</div>
-        <div class="letter" id="letter-m" onclick="letterOverlay(this)">m</div>
-        <div class="letter" id="letter-n" onclick="letterOverlay(this)">n</div>
-        <div class="letter" id="letter-o" onclick="letterOverlay(this)">o</div>
-        <div class="letter" id="letter-p" onclick="letterOverlay(this)">p</div>
-        <div class="letter" id="letter-q" onclick="letterOverlay(this)">q</div>
-        <div class="letter" id="letter-r" onclick="letterOverlay(this)">r</div>
-        <div class="letter" id="letter-s" onclick="letterOverlay(this)">s</div>
-        <div class="letter" id="letter-t" onclick="letterOverlay(this)">t</div>
-        <div class="letter" id="letter-u" onclick="letterOverlay(this)">u</div>
-        <div class="letter" id="letter-v" onclick="letterOverlay(this)">v</div>
-        <div class="letter" id="letter-w" onclick="letterOverlay(this)">w</div>
-        <div class="letter" id="letter-x" onclick="letterOverlay(this)">x</div>
-        <div class="letter" id="letter-y" onclick="letterOverlay(this)">y</div>
-        <div class="letter" id="letter-z" onclick="letterOverlay(this)">z</div>
+        <div id="step1" class="feedback">
+            <img src="images/ic_mode_edit_white_48dp.png" class="feedback_IMG">
+            <span class="feedback_text">maak het woord</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameWoordStep2();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+            </div>
+        </div>
+        <div id="step2" class="feedback">
+            <img src="images/ic_hearing_white_48dp.png" class="feedback_IMG">
+            <span class="feedback_text">luister</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button ab2" onclick="playWoord();"><img src="images/ic_autorenew_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button ab2" onclick="gameWoordStep3();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+            </div>
+        </div>
+        <div id="step3" class="feedback">
+            <div id="controlholder" class="controlholder">
+                <canvas id="canvas"></canvas>
+                <video id="video" autoplay></video>
+                <span id="transcript"></span>
+            </div>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameWoordControl();"><img src="images/ic_photo_camera_white_72dp.png" class="action_button_IMG" id="bttn_control"/></button>
+            </div>
+        </div>
+        <div id="step4" class="feedback">
+            <img src="images/good_ape.png" class="feedback_IMG" id="good_IMG">
+            <span class="feedback_text">goed</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameWoordStep0();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+            </div>
+        </div>
+        <div id="step5" class="feedback">
+            <img src="images/ic_autorenew_white_48dp.png" class="feedback_IMG">
+            <span class="feedback_text">opnieuw</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameWoordStep2();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+            </div>
+        </div>
+        <div id="step6" class="feedback">
+            <span class="feedback_letter" id="step6_letter_show"></span>
+            <span class="feedback_text">&nbsp;</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameWoordStep0();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div id="progressbar">
+            &nbsp;
+        </div>
     </div>
 </body>
 

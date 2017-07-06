@@ -9,7 +9,7 @@ function newBubbleAnimator() {
     let body = document.body,
         html = document.documentElement;
     h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    canvas = document.getElementById("canvas");
+    canvas = document.getElementById("canvas_ani");
     canvas.setAttribute("width", w);
     canvas.setAttribute("height", h);
     ctx = canvas.getContext('2d');

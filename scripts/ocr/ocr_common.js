@@ -14,6 +14,7 @@ function load(successCallback, failedCallback) {
     ocr.initCamera();
     switch (document.URL) {
         case letter.html:
+            load 
         
     }
     load_1();

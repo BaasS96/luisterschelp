@@ -29,10 +29,18 @@ class OCR {
         let body = document.body,
             html = document.documentElement;
         this.h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-        canvas.setAttribute("width", 600);
-        canvas.setAttribute("height", 600);
-        this.cw = 600;
-        this.ch = 600;
+        if (this.w < this.h) {
+            canvas.setAttribute("width", this.w * 0.7);
+            canvas.setAttribute("height", this.w * 0.7);
+            this.cw = this.w * 0.7;
+            this.ch = this.w * 0.7;
+        }
+        else {
+            canvas.setAttribute("width", this.h * 0.7);
+            canvas.setAttribute("height", this.h * 0.7);
+            this.cw = this.h * 0.7;
+            this.ch = this.h * 0.7;
+        }
         if (navigator.userAgent.includes("Linux") && navigator.userAgent.includes("Gecko")) {
             //We're dealing with mobile firefox here, or on linux but nobody uses that.
             this.canvas.style.transform = "scaleY(-1)";

@@ -5,7 +5,6 @@
     <title>
         Magische Luisterschelp
     </title>
-    <link rel="stylesheet" type="text/css" href="styles/ocr.css">
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="styles/games.css">
     <script src="scripts/ocr/ocrad.js"></script>
@@ -14,8 +13,11 @@
     <script src="scripts/howler-min.js"></script>
     <script src="scripts/ocr/ocr.js"></script>
     <script src="scripts/ocr/ocr_common.js"></script>
+    <script src="scripts/games.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0288D1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 <!-- onload="load(load_1, fail);" !-->
 <body>
@@ -30,16 +32,29 @@
         </div>
     </div>
     <div id="workarea">
-        <div id="sound" class="feedback">
-            <img src="images/ic_hearing_white_48dp.png" class="feedback_IMG">
-            <span class="feedback_text">luister</span>
-            <button type="button" class="action_button"><img src="images/ic_autorenew_white_48dp" class="action_button_IMG" /></button>
-            <button type="button" class="action_button"><img src="images/ic_arrow_forward_white_48dp" class="action_button_IMG" /></button>
+        <div id="step1" class="feedback">
+            <img src="images/ic_text_fields_white_48dp.png" class="feedback_IMG">
+            <span class="feedback_text">zoek dezelfde</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameLetterStep2();"><img src="images/ic_arrow_forward_white_48dp" class="action_button_IMG" /></button>
+            </div>
         </div>
-        <div id="controlholder" class="controlholder">
-            <canvas id="canvas"></canvas>
-            <video id="video" autoplay></video>
-            <span id="transcript"></span>
+        <div id="step2" class="feedback">
+            <span class="feedback_letter" id="step2_letter_show"></span>
+            <span class="feedback_text">&nbsp;</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameLetterStep3();"><img src="images/ic_arrow_forward_white_48dp" class="action_button_IMG" /></button>
+            </div>
+        </div>
+        <div id="step3" class="feedback">
+            <div id="controlholder" class="controlholder">
+                <canvas id="canvas"></canvas>
+                <video id="video" autoplay></video>
+                <span id="transcript"></span>
+            </div>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameLetterControl();"><img src="images/ic_photo_camera_white_72dp" class="action_button_IMG" /></button>
+            </div>
         </div>
     </div>
     <div id="footer">

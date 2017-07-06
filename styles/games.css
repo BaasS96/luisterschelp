@@ -1,11 +1,10 @@
 .controlholder {
-    display: none;
+    display: block;
 }
 
 .feedback {
     height: calc(100% - 6em);
     width: 100%;
-    display: block;
     justify-content: center;
     align-content: center;
     margin-top: 1em;
@@ -17,19 +16,30 @@
 }
 .feedback_text {
     display: block;
-    font-size: 4em;
+    font-size: 3em;
     color: #FFFFFF;
+}
+.action_button_holder {
+    margin-left: auto;
+    margin-right: auto;
 }
 .action_button {
     width: 46vw;
     margin-left: 2vw;
     margin-right: 2vw;
-    margin-top: 3vh;
-    margin-bottom: 3vh;
+    margin-top: 4vh;
+    margin-bottom: 4vh;
     height: auto;
     background-color: #0288D1;
     border: none;
+    display: inline-block;
+}
+.ab2 {
     float: left;
+}
+.feedback_letter {
+    font-size: 35vh;
+    color: #FFFFFF;
 }
 .action_button_IMG {
     max-width: 30vw;
@@ -49,4 +59,22 @@
     height: 100%;
     background-color: #FF9800;
     transition: width 0.5s ease;
+}
+#step1 {
+    display: block;
+}
+#step2 {
+    display: none;
+}
+#step3 {
+    display: none;
+}
+#canvas {
+    margin-left: auto;
+    margin-right: auto;
+    border: 5px solid red;
+}
+#video {
+    border: 3px solid blue;
+    display: none;
 }

@@ -53,8 +53,12 @@ function gameLetterControl() {
     ocr.recognize();
 }
 function gameLetterStep4(result) {
+    //Answer was correct
     document.getElementById("step3").style.display = "none";
     document.getElementById("step4").style.display = "block";
+    let goodImg = ["images/good_ape.png","images/good_smile.png","images/good_thumb.png"];
+    let r = _.random(0, goodImg.length);
+    document.getElementById("good_IMG").src = goodImg[r];
     document.getElementById("progressbar").style.width = "100%";
     document.getElementById("letterholder").innerHTML = letter;
     document.getElementById("letterimg").src = "images/letters/" + letter + ".png";

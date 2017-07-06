@@ -16,11 +16,15 @@ class OCRResult {
     }
 }
 
+var ctx;
+
 class OCR {
 
-    init() {
+    init(onrecognized) {
         this.canvas = document.getElementById("canvas");
-        this.ctx = canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d");
+        ctx = this.ctx;
+        console.log(this.ctx);
         this.w = window.innerWidth;
         let body = document.body,
             html = document.documentElement;
@@ -35,9 +39,11 @@ class OCR {
         }
         this.photo = false;
         this.backcam = undefined;
+        this.onrecognized = onrecognized;
     }
 
     initCamera() {
+        var t = this;
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({
                 video: {
@@ -46,7 +52,8 @@ class OCR {
             }).then(function(stream) {
                 video.src = window.URL.createObjectURL(stream);
                 video.play();
-                this.draw(video, 0, 0, cw, ch);
+                setInterval(t.draw, 20, video, 0, 0, t.cw, t.ch, t.ctx);
+                //t.draw(video, 0, 0, t.cw, t.ch, t.ctx);
             }).catch(function(err) {
                 console.log(err);
             });
@@ -75,16 +82,14 @@ class OCR {
         var text = OCRAD(data);
         let conf = this.confidence(text);
         let res = new OCRResult(conf);
-        let e = new CustomEvent('recognized', { 'result': res });
-        this.dispatchEvent(e);
+        this.onrecognized(res);
         //alert(string);
         this.photo = false;
     }
 
-    draw(v, x, y, w, h) {
+    draw(v, x, y, w, h, c) { 
         if (!this.photo) {
-            this.ctx.drawImage(v, x, y, w, h);
-            setTimeout(this.draw, 20, v, x, y, w, h);
+            ctx.drawImage(v, x, y, w, h);
         } else {
             //ctx.drawImage(v, x, y, w, h);
         }

@@ -3,16 +3,23 @@ var ocr;
 
 function load(successCallback, failedCallback) {
     ocr = new OCR();
-    ocr.init();
-    ocr.initCamera();
-    ocr.addEventListener('recognized', function(e) {
-        if (e.result.hasFailed()) {
+    let func = function(res) {
+        if (res.hasFailed()) {
             failedCallback();
         } else {
-            successCallback(e);
+            successCallback(res);
         }
-    }, false);
+    }
+    ocr.init(func);
+    ocr.initCamera();
+    switch (document.URL) {
+        case letter.html:
+        
+    }
+    load_1();
 }
+
+function c() {}
 
 function load_1() {
     let abc = "abcdefghijklmnopqrstuvwxyz";
@@ -25,8 +32,6 @@ function load_1() {
             setTimeout(function() {
                 document.getElementById("sound").style.display = "none";
                 document.getElementById("controlholder").style.display = "block";
-                init();
-                initCamera();
             }, 1000);
         }
     });

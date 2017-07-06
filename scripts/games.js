@@ -28,10 +28,10 @@ function gameLetterStep3() {
             let result = res.getResult();
             if (result === letter) {
                 ocr.videostream.getTracks()[0].stop();
-                gameLetterStep4();
+                gameLetterStep4(result);
             }
             else {
-                gameLetterStep5();
+                gameLetterStep5(result);
             }
         }
     }
@@ -43,16 +43,18 @@ function gameLetterControl() {
     ocr.photo = true;
     ocr.recognize();
 }
-function gameLetterStep4() {
+function gameLetterStep4(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step4").style.display = "block";
     document.getElementById("progressbar").style.width = "100%";
     document.getElementById("letteroverlay").style.marginLeft = 0;
+    document.getElementById("step4_letter_show").innerHTML = result + "/" + letter;
     setTimeout(function() {
        document.getElementById("letteroverlay").style.marginLeft = "-110vw";
     }, 750);
 }
-function gameLetterStep5() {
+function gameLetterStep5(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step4").style.display = "block";
+    document.getElementById("step4_letter_show").innerHTML = result + "/" + letter ;
 }

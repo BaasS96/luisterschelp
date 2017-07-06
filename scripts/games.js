@@ -1,4 +1,5 @@
 var letter;
+var ocr;
 //functions for LETTER GAME
 function gameLetterStep2() {
     document.getElementById("step1").style.display = "none";
@@ -28,5 +29,6 @@ function gameLetterStep3() {
     alert(navigator.userAgent);
 }
 function gameLetterControl() {
-    
+    ocr.photo = true;
+    ocr.recognize();
 }

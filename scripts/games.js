@@ -4,6 +4,7 @@ var ocr;
 function gameLetterStep2() {
     document.getElementById("step1").style.display = "none";
     document.getElementById("step2").style.display = "block";
+    document.getElementById("progressbar").style.width = "33%";
     if (letter) {
     }
     else {
@@ -16,12 +17,21 @@ function gameLetterStep2() {
 function gameLetterStep3() {
     document.getElementById("step2").style.display = "none";
     document.getElementById("step3").style.display = "block";
+    document.getElementById("progressbar").style.width = "66%";
     ocr = new OCR();
     let func = function(res) {
         if (res.hasFailed()) {
-            alert("fail");
-        } else {
-            alert(res.getResult());
+            document.getElementById("bttn_control").src = "images/ic_warning_orange_96dp.png";
+            setTimeout(function(){ document.getElementById("bttn_control").src = "images/ic_photo_camera_white_72dp.png"; }, 3000);
+        }
+        else {
+            let result = res.getResult();
+            if (result === letter) {
+                //step 5
+            }
+            else {
+                //step 4
+            }
         }
     }
     ocr.init(func);

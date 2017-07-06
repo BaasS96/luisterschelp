@@ -47,14 +47,31 @@ function gameLetterStep4(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step4").style.display = "block";
     document.getElementById("progressbar").style.width = "100%";
-    document.getElementById("letteroverlay").style.marginLeft = 0;
     document.getElementById("step4_letter_show").innerHTML = result + "/" + letter;
-    setTimeout(function() {
-       document.getElementById("letteroverlay").style.marginLeft = "-110vw";
-    }, 750);
+    document.getElementById("letterholder").innerHTML = letter;
+    document.getElementById("letterimg").src = "images/letters/" + letter + ".png";
+    document.getElementById("letteroverlay").style.marginLeft = 0;
+    var letterSound = new Howl({
+        src: ['sound/letters/' + letter + '.flac', 'sound/letters/' + letter + '.mp3'],
+        volume: 1,
+        onend: function() {
+            setTimeout(function() {
+                document.getElementById("letteroverlay").style.marginLeft = "-110vw";
+            }, 750);
+        }
+    });
+    letterSound.play();
+    alert(result + "/" + letter);
 }
 function gameLetterStep5(result) {
     document.getElementById("step3").style.display = "none";
-    document.getElementById("step4").style.display = "block";
-    document.getElementById("step4_letter_show").innerHTML = result + "/" + letter ;
+    document.getElementById("step5").style.display = "block";
+    alert(result + "/" + letter);
+}
+function gameLetterStep0() {
+    letter = undefined;
+    document.getElementById("step4").style.display = "none";
+    document.getElementById("step6").style.display = "none";
+    document.getElementById("step1").style.display = "block";
+    document.getElementById("progressbar").style.width = "0%";
 }

@@ -1,5 +1,6 @@
 var letter;
 var ocr;
+var failcount = 0;
 //functions for LETTER GAME
 function gameLetterStep2() {
     document.getElementById("step1").style.display = "none";
@@ -33,7 +34,13 @@ function gameLetterStep3() {
                 //gameLetterStep4(result);
             }
             else {
-                //gameLetterStep5(result);
+                //failcount ++
+                //if (failcount >= 5) {
+                //    gameLetterStep6(result);
+                //}
+                //else {
+                //    gameLetterStep5(result);
+                //}
             }
         }
     }
@@ -69,8 +76,28 @@ function gameLetterStep5(result) {
     document.getElementById("step5").style.display = "block";
     alert(result + "/" + letter);
 }
+function gameLetterStep6(result) {
+    document.getElementById("step4").style.display = "none";
+    document.getElementById("step6").style.display = "block";
+    document.getElementById("progressbar").style.width = "100%";
+    document.getElementById("letterholder").innerHTML = letter;
+    document.getElementById("letterimg").src = "images/letters/" + letter + ".png";
+    document.getElementById("letteroverlay").style.marginLeft = 0;
+    var letterSound = new Howl({
+        src: ['sound/letters/' + letter + '.flac', 'sound/letters/' + letter + '.mp3'],
+        volume: 1,
+        onend: function() {
+            setTimeout(function() {
+                document.getElementById("letteroverlay").style.marginLeft = "-110vw";
+            }, 750);
+        }
+    });
+    letterSound.play();
+    alert(result + "/" + letter);
+}
 function gameLetterStep0() {
     letter = undefined;
+    failcount = 0;
     document.getElementById("step4").style.display = "none";
     document.getElementById("step6").style.display = "none";
     document.getElementById("step1").style.display = "block";

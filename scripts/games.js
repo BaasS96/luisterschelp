@@ -19,9 +19,9 @@ function gameLetterStep3() {
     ocr = new OCR();
     let func = function(res) {
         if (res.hasFailed()) {
-            failedCallback();
+            alert("fail");
         } else {
-            successCallback(res);
+            alert(res.getResult());
         }
     }
     ocr.init(func);

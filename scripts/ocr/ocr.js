@@ -11,7 +11,7 @@ class OCRResult {
     hasFailed() {
         return this.failed;
     }
-    get result() {
+    getResult() {
         return this.result;
     }
 }
@@ -85,8 +85,8 @@ class OCR {
     recognize() {
         console.log("recognizing...");
         this.photo = true;
-        console.log(this.ctx.getImageData(0, 0, cw, ch));
-        let data = threshold(this.ctx.getImageData(0, 0, cw, ch));
+        console.log(this.ctx.getImageData(0, 0, this.cw, this.ch));
+        let data = this.threshold(this.ctx.getImageData(0, 0, this.cw, this.ch));
         console.log(data);
         this.ctx.putImageData(data, 0, 0);
         var text = OCRAD(data);
@@ -127,7 +127,7 @@ class OCR {
                 newIData[i + 2] = 0;
             }
         }
-        d.data = newIData;
+        d.data.set(newIData);
         return d;
     }
 

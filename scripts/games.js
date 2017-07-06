@@ -193,7 +193,7 @@ function gameKlankStep3() {
                     volume: 1,
                     onend: function() {
                         setTimeout(function() {
-                            gameLetterStep4(result);
+                            gameKlankStep4(result);
                         }, 500)
                     }
                 });
@@ -209,7 +209,7 @@ function gameKlankStep3() {
                         volume: 1,
                         onend: function() {
                             setTimeout(function() {
-                                gameLetterStep6(result);
+                                gameKlankStep6(result);
                             }, 500)
                         }
                     });
@@ -221,7 +221,7 @@ function gameKlankStep3() {
                         volume: 1,
                         onend: function() {
                             setTimeout(function() {
-                                gameLetterStep5(result);
+                                gameKlankStep5(result);
                             }, 500)
                         }
                     });
@@ -316,7 +316,7 @@ function playWoord() {
         let letterWoord = woord.charAt(i);
         if (i === 0) {
             var letterSound = new Howl({
-                src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                 volume: 1
             });
             letterSound.play();
@@ -324,7 +324,7 @@ function playWoord() {
         else {
             setTimeout(function() {
                 var letterSound = new Howl({
-                    src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                    src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                     volume: 1
                 });
                 letterSound.play();
@@ -362,14 +362,14 @@ function gameWoordStep3() {
         }
         else {
             var result = res.getResult();
-            if (result === letter) {
+            if (result === woord) {
                 ocr.videostream.getTracks()[0].stop();
                 let soundGood = new Howl({
                     src: ['sound/beep_good.flac', 'sound/beep_good.mp3'],
                     volume: 1,
                     onend: function() {
                         setTimeout(function() {
-                            gameLetterStep4(result);
+                            gameWoordStep4(result);
                         }, 500)
                     }
                 });
@@ -385,7 +385,7 @@ function gameWoordStep3() {
                         volume: 1,
                         onend: function() {
                             setTimeout(function() {
-                                gameLetterStep6(result);
+                                gameWoordStep6(result);
                             }, 500)
                         }
                     });
@@ -397,7 +397,7 @@ function gameWoordStep3() {
                         volume: 1,
                         onend: function() {
                             setTimeout(function() {
-                                gameLetterStep5(result);
+                                gameWoordStep5(result);
                             }, 500)
                         }
                     });
@@ -428,7 +428,7 @@ function gameWoordStep4(result) {
         let letterWoord = woord.charAt(i);
         if (i === 0) {
             var letterSound = new Howl({
-                src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                 volume: 1
             });
             letterSound.play();
@@ -436,7 +436,7 @@ function gameWoordStep4(result) {
         else if (i === woord.length - 1) {
             setTimeout(function() {
                 var letterSound = new Howl({
-                    src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                    src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                     volume: 1,
                     onend: function() {
                         setTimeout(function() {
@@ -450,19 +450,21 @@ function gameWoordStep4(result) {
         else {
             setTimeout(function() {
                 var letterSound = new Howl({
-                    src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                    src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                     volume: 1
                 });
                 letterSound.play();
             }, 900 * i)
         }
     } 
-    console.log(result + "/" + letter);
+    alert(result + "/" + woord);
+    console.log(result + "/" + woord);
 }
 function gameWoordStep5(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step5").style.display = "block";
-    console.log(result + "/" + letter);
+    alert(result + "/" + woord);
+    console.log(result + "/" + woord);
 }
 function gameWoordStep6(result) {
     document.getElementById("step4").style.display = "none";
@@ -476,7 +478,7 @@ function gameWoordStep6(result) {
         let letterWoord = woord.charAt(i);
         if (i === 0) {
             var letterSound = new Howl({
-                src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                 volume: 1
             });
             letterSound.play();
@@ -484,7 +486,7 @@ function gameWoordStep6(result) {
         else if (i === woord.length - 1) {
             setTimeout(function() {
                 var letterSound = new Howl({
-                    src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                    src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                     volume: 1,
                     onend: function() {
                         setTimeout(function() {
@@ -498,14 +500,15 @@ function gameWoordStep6(result) {
         else {
             setTimeout(function() {
                 var letterSound = new Howl({
-                    src: ['sound/letters/' + letterWoord + '.flac', blobreg.get(letterWoord + '.mp3')],
+                    src: ['sound/letters/' + letterWoord + '.flac', 'sound/letters/' + letterWoord + '.mp3'],
                     volume: 1
                 });
                 letterSound.play();
             }, 900 * i)
         }
     }
-    console.log(result + "/" + letter);
+    alert(result + "/" + woord);
+    console.log(result + "/" + woord);
 }
 function gameWoordStep0() {
     letter = undefined;

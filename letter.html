@@ -3,30 +3,31 @@
 
 <head>
     <title>
-        Magische Luisterschelp
+        Luisterschelp - Zoek dezelfde letter
     </title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="styles/games.css">
     <script src="scripts/ocr/ocrad.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="scripts/lodash-min.js"></script>
+    <script src="scripts/functions.js"></script>
     <script src="scripts/howler-min.js"></script>
     <script src="scripts/ocr/ocr.js"></script>
     <script src="scripts/ocr/ocr_common.js"></script>
     <script src="scripts/games.js"></script>
+    <script src="scripts/animations.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0288D1" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 </head>
-<!-- onload="load(load_1, fail);" !-->
-<body>
+<body onload="setVolumeOnLoad(); bgSoundFx();">
     <div id="letteroverlay">
         <span id="letterholder">0</span><img src="images/letters/a.png" id="letterimg" />
     </div>
     <div id="header">
         <a href="index.html">
-            <img src="images/ic_home_white_48dp.png" id="homebttn" />
+            <img src="images/ic_home_gray_48dp.png" id="homebttn" />
         </a>
         <div id="volholder">
             <img src="images/ic_volume_mute_white_48dp.png" id="vollow" />
@@ -60,7 +61,7 @@
             </div>
         </div>
         <div id="step4" class="feedback">
-            <img src="images/good_ape.png" class="feedback_IMG">
+            <img src="images/good_ape.png" class="feedback_IMG" id="good_IMG">
             <span class="feedback_text">goed</span>
             <div class="action_button_holder">
                 <button type="button" class="action_button" onclick="gameLetterStep0();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
@@ -71,6 +72,13 @@
             <span class="feedback_text">opnieuw</span>
             <div class="action_button_holder">
                 <button type="button" class="action_button" onclick="gameLetterStep2();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+            </div>
+        </div>
+        <div id="step6" class="feedback">
+            <span class="feedback_letter" id="step6_letter_show"></span>
+            <span class="feedback_text">&nbsp;</span>
+            <div class="action_button_holder">
+                <button type="button" class="action_button" onclick="gameLetterStep0();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
             </div>
         </div>
     </div>

@@ -36,9 +36,9 @@ function setVolumeOnLoad() {
 }
 
 function setVolume(volume, button) {
-    document.getElementById("volhigh").src = "images/ic_volume_up_white_48dp.png";
-    document.getElementById("volmid").src = "images/ic_volume_down_white_48dp.png";
-    document.getElementById("vollow").src = "images/ic_volume_mute_white_48dp.png";
+    document.getElementById("volhigh").src = "images/ic_volume_up_gray_48dp.png";
+    document.getElementById("volmid").src = "images/ic_volume_down_gray_48dp.png";
+    document.getElementById("vollow").src = "images/ic_volume_mute_gray_36dp.png";
     Howler.volume(volume);
     sessionStorage.volume = volume;
     let speaker = document.getElementById(button);

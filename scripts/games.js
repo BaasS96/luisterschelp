@@ -51,7 +51,7 @@ function gameLetterStep3() {
             }
             else {
                 failcount ++;
-                if (failcount >= 5) {
+                if (failcount >= 3) {
                     gameLetterStep6(result);
                     ocr.videostream.getTracks()[0].stop();
                     let soundFail = new Howl({
@@ -201,7 +201,7 @@ function gameKlankStep3() {
             }
             else {
                 failcount ++;
-                if (failcount >= 5) {
+                if (failcount >= 3) {
                     gameLetterStep6(result);
                     ocr.videostream.getTracks()[0].stop();
                     let soundFail = new Howl({
@@ -377,7 +377,7 @@ function gameWoordStep3() {
             }
             else {
                 failcount ++;
-                if (failcount >= 5) {
+                if (failcount >= 3) {
                     gameLetterStep6(result);
                     ocr.videostream.getTracks()[0].stop();
                     let soundFail = new Howl({

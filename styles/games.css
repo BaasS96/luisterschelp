@@ -81,9 +81,13 @@
 #canvas {
     margin-left: auto;
     margin-right: auto;
-    border: 5px solid red;
+    /*border: 5px solid #FF9800;*/
 }
 #video {
-    border: 3px solid blue;
+    border: none;
     display: none;
+}
+#woordholder {
+    font-size: 3em;
+    color: #FFFFFF;
 }

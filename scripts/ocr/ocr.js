@@ -46,13 +46,11 @@ class OCR {
             this.ch = this.h * 0.7;
         }
         console.log(navigator.userAgent);
-        if (navigator.userAgent.includes("Firefox")) {
-            if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
-                //We're dealing with mobile firefox here, or on linux but nobody uses that.
-                //this.canvas.style.transform = "scaleY(-1)";
-                ctx.translate(0, this.ch);
-                ctx.scale(1, -1);
-            }
+        if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
+            //We're dealing with mobile firefox here, or on linux but nobody uses that.
+            //this.canvas.style.transform = "scaleY(-1)";
+            ctx.translate(0, this.ch);
+            ctx.scale(1, -1);
         }
         this.photo = false;
         this.backcam = undefined;

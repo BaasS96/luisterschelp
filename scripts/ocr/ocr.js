@@ -61,7 +61,7 @@ class OCR {
         var t = this;
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({
-                video: true
+                video: { facingMode: "environment" }
             }).then(function(stream) {
                 t.videostream = stream;
                 video.src = window.URL.createObjectURL(stream);

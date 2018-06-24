@@ -46,7 +46,8 @@ class OCR {
             this.ch = this.h * 0.7;
         }
         console.log(navigator.userAgent);
-        if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android")) {
+        alert(navigator.userAgent);
+        if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android") || navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
             //We're dealing with mobile firefox here, or on linux but nobody uses that.
             //this.canvas.style.transform = "scaleY(-1)";
             ctx.translate(0, this.ch);

@@ -1,0 +1,45 @@
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+vendor/
+
+# Logs and runtime files
+*.log
+*.pid
+*.seed
+
+# Build and coverage output
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+luisterschelp/
+model_trainer/
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local tooling
+.vercel/
+.parcel-cache/

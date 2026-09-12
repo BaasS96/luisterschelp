@@ -46,13 +46,13 @@ class OCR {
             this.ch = this.h * 0.7;
         }
         console.log(navigator.userAgent);
-        alert(navigator.userAgent);
-        if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android") || navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-            //We're dealing with mobile firefox here, or on linux but nobody uses that.
-            //this.canvas.style.transform = "scaleY(-1)";
-            ctx.translate(0, this.ch);
-            ctx.scale(1, -1);
-        }
+        // alert(navigator.userAgent);
+        // if (navigator.userAgent.includes("Linux") || navigator.userAgent.includes("Android") || navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+        //     //We're dealing with mobile firefox here, or on linux but nobody uses that.
+        //     //this.canvas.style.transform = "scaleY(-1)";
+        //     ctx.translate(0, this.ch);
+        //     ctx.scale(1, -1);
+        // }
         this.photo = false;
         this.backcam = undefined;
         this.onrecognized = onrecognized;
@@ -65,7 +65,7 @@ class OCR {
                 video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } }
             }).then(function(stream) {
                 t.videostream = stream;
-                video.src = window.URL.createObjectURL(stream);
+                video.srcObject = stream;
                 video.play();
                 setInterval(t.draw, 20, video, 0, 0, t.cw, t.ch, t.ctx);
                 //t.draw(video, 0, 0, t.cw, t.ch, t.ctx);

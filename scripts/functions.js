@@ -10,15 +10,14 @@ function letterOverlay(objId) {
     document.getElementById("letterholder").innerHTML = letter;
     document.getElementById("letterimg").src = "images/letters/" + letter + ".png";
     document.getElementById("letteroverlay").style.marginLeft = 0;
+    const timeoutplus = setTimeout(function() {
+                document.getElementById("letteroverlay").style.marginLeft = "-110vw";
+            }, 2000);
     var letterSound = new Howl({
         src: ['sound/letters/' + letter + '.flac', 'sound/letters/' + letter + '.mp3'],
         volume: 1,
-        onend: function() {
-            setTimeout(function() {
-                document.getElementById("letteroverlay").style.marginLeft = "-110vw";
-            }, 750);
         }
-    });
+    );
     letterSound.play();
 }
 

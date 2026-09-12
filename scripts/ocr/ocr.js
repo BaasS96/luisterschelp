@@ -6,7 +6,9 @@ import {WebGPUBackend} from '@tensorflow/tfjs-backend-webgpu'
 // Model configuration
 const MODEL_IMAGE_SIZE = [256, 256]; // Updated to 256x256
 const MODEL_PATH = 'model_trainer/model.tflite';
-const WASM_PATH = 'scripts/ocr/node_modules/@litertjs/core/wasm/';
+
+//SHOULD BE UPDATED IF/WHEN YOU UPDATE LiteRT
+const WASM_PATH = 'scripts/ocr/dist/wasm';
 
 export class OCRResult {
     constructor(result) {

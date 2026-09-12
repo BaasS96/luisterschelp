@@ -63627,7 +63627,7 @@ const jJ = [
 ];
 for (const n of jJ)
   gp(n);
-const qJ = [256, 256], dx = "model_trainer/model.tflite", YJ = "scripts/ocr/node_modules/@litertjs/core/wasm/";
+const qJ = [256, 256], dx = "model_trainer/model.tflite", YJ = "scripts/ocr/dist/wasm";
 class sd {
   constructor(e) {
     e === !1 ? (this.failed = !0, this.result = "") : (this.failed = !1, this.result = e);

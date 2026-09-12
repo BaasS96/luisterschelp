@@ -65,7 +65,6 @@ html, body {
     font-size: 4.5vw;
     text-align: left;
     vertical-align: middle;
-    line-height: 17vh;
     color: #FFFFFF;
     margin-left: auto;
     margin-right: auto;
@@ -73,15 +72,22 @@ html, body {
     margin-bottom: 2.5vh;
     background-color: #0288D1;
     transition: background-color 0.2s ease;
+    display: flex;
 }
 .block_menu:hover {
-    background-color: #448AFF;
+    background-color: #468aff;
 }
 .block_menu_item_img {
     height: 13vh;
     margin: 2.5vh;
-    float: left;
 }
 .block_menu_item_text {
-    float: left;
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
+    margin-right: 2.5vh;
+    display: inline-flex;
+    align-items: center;
+}
+a {
+    text-decoration: none;
 }

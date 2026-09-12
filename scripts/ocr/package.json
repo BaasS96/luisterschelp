@@ -1,0 +1,21 @@
+{
+  "name": "ocr",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "ocr_common.js",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@litertjs/core": "^2.5.3",
+    "@litertjs/tfjs-interop": "^2.5.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-webgpu": "^4.22.0"
+  }
+}

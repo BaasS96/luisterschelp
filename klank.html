@@ -7,13 +7,12 @@
     </title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="styles/games.css">
-    <script src="scripts/ocr/ocrad.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="scripts/lodash-min.js"></script>
     <script src="scripts/functions.js"></script>
     <script src="scripts/howler-min.js"></script>
-    <script src="scripts/ocr/ocr.js"></script>
-    <script src="scripts/games.js"></script>
+    <script src="scripts/ocr/dist/ocr-bundle.umd.js"></script>
+    <script type="module" src="scripts/games.js"></script>
     <script src="scripts/animations.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0288D1" />
@@ -39,15 +38,15 @@
             <img src="images/ic_record_voice_over_white_48dp.png" class="feedback_IMG">
             <span class="feedback_text">zoek de klank</span>
             <div class="action_button_holder">
-                <button type="button" class="action_button" onclick="gameKlankStep2();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button" data-game-action="gameKlankStep2"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
             </div>
         </div>
         <div id="step2" class="feedback">
             <img src="images/ic_hearing_white_48dp.png" class="feedback_IMG">
             <span class="feedback_text">luister</span>
             <div class="action_button_holder">
-                <button type="button" class="action_button ab2" onclick="playSound();"><img src="images/ic_autorenew_white_48dp.png" class="action_button_IMG" /></button>
-                <button type="button" class="action_button ab2" onclick="gameKlankStep3();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button ab2" data-game-action="playSound"><img src="images/ic_autorenew_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button ab2" data-game-action="gameKlankStep3"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
             </div>
         </div>
         <div id="step3" class="feedback">
@@ -57,28 +56,28 @@
                 <span id="transcript"></span>
             </div>
             <div class="action_button_holder">
-                <button type="button" class="action_button" onclick="gameKlankControl();"><img src="images/ic_photo_camera_white_72dp.png" class="action_button_IMG" id="bttn_control"/></button>
+                <button type="button" class="action_button" data-game-action="gameKlankControl"><img src="images/ic_photo_camera_white_72dp.png" class="action_button_IMG" id="bttn_control"/></button>
             </div>
         </div>
         <div id="step4" class="feedback">
             <img src="images/good_ape.png" class="feedback_IMG" id="good_IMG">
             <span class="feedback_text">goed</span>
             <div class="action_button_holder">
-                <button type="button" class="action_button" onclick="gameKlankStep0();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button" data-game-action="gameKlankStep0"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
             </div>
         </div>
         <div id="step5" class="feedback">
             <img src="images/ic_autorenew_white_48dp.png" class="feedback_IMG">
             <span class="feedback_text">opnieuw</span>
             <div class="action_button_holder">
-                <button type="button" class="action_button" onclick="gameKlankStep2();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button" data-game-action="gameKlankStep2"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
             </div>
         </div>
         <div id="step6" class="feedback">
             <span class="feedback_letter" id="step6_letter_show"></span>
             <span class="feedback_text">&nbsp;</span>
             <div class="action_button_holder">
-                <button type="button" class="action_button" onclick="gameKlankStep0();"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
+                <button type="button" class="action_button" data-game-action="gameKlankStep0"><img src="images/ic_arrow_forward_white_48dp.png" class="action_button_IMG" /></button>
             </div>
         </div>
     </div>

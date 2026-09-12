@@ -3,6 +3,8 @@ var woord;
 var ocr;
 var failcount = 0;
 
+const { OCR, OCRResult } = OCRModule;
+
 //functions for LETTER GAME
 function gameLetterStep2() {
     document.getElementById("step1").style.display = "none";
@@ -11,7 +13,7 @@ function gameLetterStep2() {
     document.getElementById("step2").style.display = "block";
     document.getElementById("progressbar").style.width = "33%";
     if (letter) {
-    }
+    }   
     else {
         let abc = "abcdefghijklmnopqrstuvwxyz";
         let r = _.random(0, abc.length);
@@ -19,11 +21,10 @@ function gameLetterStep2() {
     }
     document.getElementById("step2_letter_show").innerHTML = letter;
 }
-function gameLetterStep3() {
+async function gameLetterStep3() {
     document.getElementById("step2").style.display = "none";
     document.getElementById("step3").style.display = "block";
     document.getElementById("progressbar").style.width = "66%";
-    ocr = new OCR(false);
     let func = function(res) {
         if (res.hasFailed()) {
             var soundIntFail = new Howl({
@@ -80,7 +81,10 @@ function gameLetterStep3() {
             }
         }
     }
-    ocr.init(func);
+    if (!ocr) {
+        ocr = new OCR(false);
+        ocr.init(func);
+    }
     ocr.initCamera();
     //alert(navigator.userAgent);
 }
@@ -169,11 +173,10 @@ function gameKlankStep2() {
     }
     playSound();
 }
-function gameKlankStep3() {
+async function gameKlankStep3() {
     document.getElementById("step2").style.display = "none";
     document.getElementById("step3").style.display = "block";
     document.getElementById("progressbar").style.width = "66%";
-    ocr = new OCR(false);
     let func = function(res) {
         if (res.hasFailed()) {
             var soundIntFail = new Howl({
@@ -230,7 +233,10 @@ function gameKlankStep3() {
             }
         }
     }
-    ocr.init(func);
+    if (!ocr) {
+        ocr = new OCR(false);
+        ocr.init(func);
+    }
     ocr.initCamera();
     //alert(navigator.userAgent);
 }
@@ -296,6 +302,25 @@ function gameKlankStep0() {
     document.getElementById("progressbar").style.width = "0%";
 }
 
+Object.assign(window, {
+    gameKlankStep0,
+    gameKlankStep2,
+    gameKlankStep3,
+    gameKlankControl,
+    gameLetterStep0,
+    gameLetterStep2,
+    gameLetterStep3,
+    gameLetterControl,
+    playSound,
+});
+
+document.querySelectorAll("[data-game-action]").forEach((button) => {
+    const action = window[button.dataset.gameAction];
+    if (typeof action === "function") {
+        button.addEventListener("click", action);
+    }
+});
+
 //functions for WOORD GAME
 function getWordList() {
     fetch('data/words.json')
@@ -345,7 +370,7 @@ function gameWoordStep2() {
         getWordList();
     }
 }
-function gameWoordStep3() {
+async function gameWoordStep3() {
     document.getElementById("step2").style.display = "none";
     document.getElementById("step3").style.display = "block";
     document.getElementById("progressbar").style.width = "66%";
@@ -406,7 +431,7 @@ function gameWoordStep3() {
             }
         }
     }
-    ocr.init(func);
+    await ocr.init(func);
     ocr.initCamera();
     //alert(navigator.userAgent);
 }

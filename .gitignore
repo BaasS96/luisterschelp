@@ -18,7 +18,6 @@ vendor/
 *.seed
 
 # Build and coverage output
-dist/
 build/
 coverage/
 .next/

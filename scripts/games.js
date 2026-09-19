@@ -16,7 +16,7 @@ function gameLetterStep2() {
     }   
     else {
         let abc = "abcdefghijklmnopqrstuvwxyz";
-        let r = _.random(0, abc.length);
+        let r = _.random(0, abc.length - 1);
         letter = abc.charAt(r);
     }
     document.getElementById("step2_letter_show").innerHTML = letter;
@@ -36,8 +36,11 @@ async function gameLetterStep3() {
             setTimeout(function(){ document.getElementById("bttn_control").src = "images/ic_photo_camera_white_72dp.png"; }, 3000);
         }
         else {
-            var result = res.getResult();
-            if (result === letter) {
+            var result = res.getResult().charAt(0);
+            console.log("Got: " + result);
+            console.log("Expected: " + letter);
+            console.log(result == letter);
+            if (result == letter) {
                 ocr.videostream.getTracks()[0].stop();
                 let soundGood = new Howl({
                     src: ['sound/beep_good.flac', 'sound/beep_good.mp3'],
@@ -168,7 +171,7 @@ function gameKlankStep2() {
     }
     else {
         let abc = "abcdefghijklmnopqrstuvwxyz";
-        let r = _.random(0, abc.length);
+        let r = _.random(0, abc.length - 1);
         letter = abc.charAt(r);
     }
     playSound();

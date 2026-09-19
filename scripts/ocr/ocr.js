@@ -1,9 +1,10 @@
 import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgpu';
+//import { createWorker } from 'tesseract.js';
 
 // Model configuration
-const MODEL_IMAGE_SIZE = [256, 256]; // Updated to 256x256
-const MODEL_PATH = 'model_trainer/luisterschelp3_saved_model/model.json';
+const MODEL_IMAGE_SIZE = [256, 256];
+const MODEL_PATH = 'model_trainer/browser_model/model.json';
 
 export class OCRResult {
     constructor(result) {
@@ -39,6 +40,66 @@ function imageDataToModelInput(imageData) {
         // Use reshape with -1 to let TensorFlow infer batch dimension
         return resized.reshape([-1, 256, 256, 1]);
     });
+}
+
+function normalizeThresholdedImageData(imageData) {
+    const { data, width, height } = imageData;
+    let minX = width;
+    let minY = height;
+    let maxX = -1;
+    let maxY = -1;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (data[(y * width + x) * 4] < 128) {
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+        }
+    }
+
+    if (maxX < 0) {
+        return imageData;
+    }
+
+    const foregroundWidth = maxX - minX + 1;
+    const foregroundHeight = maxY - minY + 1;
+    const padding = Math.round(Math.max(foregroundWidth, foregroundHeight) * 0.15);
+    const cropSize = Math.max(foregroundWidth, foregroundHeight) + padding * 2;
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const cropLeft = Math.max(0, Math.min(width - cropSize, Math.round(centerX - cropSize / 2)));
+    const cropTop = Math.max(0, Math.min(height - cropSize, Math.round(centerY - cropSize / 2)));
+
+    const sourceCanvas = document.createElement('canvas');
+    sourceCanvas.width = width;
+    sourceCanvas.height = height;
+    const sourceContext = sourceCanvas.getContext('2d');
+    sourceContext.fillStyle = 'white';
+    sourceContext.fillRect(0, 0, width, height);
+    sourceContext.putImageData(imageData, 0, 0);
+
+    const normalizedCanvas = document.createElement('canvas');
+    normalizedCanvas.width = 256;
+    normalizedCanvas.height = 256;
+    const normalizedContext = normalizedCanvas.getContext('2d');
+    normalizedContext.fillStyle = 'white';
+    normalizedContext.fillRect(0, 0, 256, 256);
+    normalizedContext.drawImage(
+        sourceCanvas,
+        cropLeft,
+        cropTop,
+        cropSize,
+        cropSize,
+        0,
+        0,
+        256,
+        256,
+    );
+
+    return normalizedContext.getImageData(0, 0, 256, 256);
 }
 
 var ctx, drawImage;
@@ -134,10 +195,12 @@ export class OCR {
         this.photo = true;
 
         try {
+            const saveTarget = await this.requestPngSaveTarget();
             const imageData = this.ctx.getImageData(0, 0, this.cw, this.ch);
-            let tresholdedData = this.threshold(imageData);
-            this.ctx.putImageData(tresholdedData, 0, 0);
-            const inputTensor = imageDataToModelInput(tresholdedData);
+            const thresholdedData = this.threshold(imageData);
+            this.ctx.putImageData(thresholdedData, 0, 0);
+            const normalizedData = normalizeThresholdedImageData(thresholdedData);
+            const inputTensor = imageDataToModelInput(normalizedData);
             const previewCanvas = document.createElement('canvas');
             previewCanvas.width = 256;
             previewCanvas.height = 256;
@@ -147,6 +210,12 @@ export class OCR {
                 inputTensor.squeeze().div(255),
                 previewCanvas,
             );
+            await this.savePng(previewCanvas, saveTarget);
+
+            const tesseractCanvas = document.createElement('canvas');
+            tesseractCanvas.width = thresholdedData.width;
+            tesseractCanvas.height = thresholdedData.height;
+            tesseractCanvas.getContext('2d').putImageData(thresholdedData, 0, 0);
 
             // Run inference with TensorFlow.js.
             const outputs = this.model.execute(inputTensor);
@@ -160,6 +229,15 @@ export class OCR {
             // Post-process
             const text = await this.postprocessPredictions(outputData);
 
+            //Run recognition with tesseract.js
+            // let worker = await createWorker('eng');
+            // let letter = await (async() => {
+            //     const { data: { text } } = await worker.recognize(tesseractCanvas);
+            //     await worker.terminate();
+            //     return text.toLowerCase();
+            // })();
+
+            //this.onrecognized(new OCRResult(letter));
             this.onrecognized(new OCRResult(text));
         } catch (error) {
             console.error("Recognition failed:", error);
@@ -167,6 +245,56 @@ export class OCR {
         } finally {
             this.photo = false;
         }
+    }
+
+    async requestPngSaveTarget() {
+        if (!window.showSaveFilePicker) {
+            return null;
+        }
+
+        try {
+            return await window.showSaveFilePicker({
+                suggestedName: `ocr-${new Date().toISOString().replace(/[:.]/g, '-')}.png`,
+                types: [{
+                    description: 'PNG image',
+                    accept: { 'image/png': ['.png'] },
+                }],
+            });
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                return { cancelled: true };
+            }
+            throw error;
+        }
+    }
+
+    async savePng(canvas, saveTarget) {
+        if (saveTarget && saveTarget.cancelled) {
+            return;
+        }
+
+        const blob = await new Promise((resolve, reject) => {
+            canvas.toBlob((result) => {
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(new Error('Could not encode the image as PNG'));
+                }
+            }, 'image/png');
+        });
+
+        if (saveTarget) {
+            const writable = await saveTarget.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            return;
+        }
+
+        const download = document.createElement('a');
+        download.href = URL.createObjectURL(blob);
+        download.download = `ocr-${Date.now()}.png`;
+        download.click();
+        URL.revokeObjectURL(download.href);
     }
 
    async postprocessPredictions(outputData) {

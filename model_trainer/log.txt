@@ -1,0 +1,79 @@
+Recognizing with TensorFlow.js model... ocr.js:194:17
+46 ocr.js:318:17
+Got: g games.js:40:21
+Expected: g games.js:41:21
+true games.js:42:21
+g/g games.js:119:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+52 ocr.js:318:17
+Got: e games.js:40:21
+Expected: s games.js:41:21
+false games.js:42:21
+e/s games.js:124:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+48 ocr.js:318:17
+Got: e games.js:40:21
+Expected: s games.js:41:21
+false games.js:42:21
+e/s games.js:124:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+51 ocr.js:318:17
+Got: e games.js:40:21
+Expected: s games.js:41:21
+false games.js:42:21
+e/s games.js:145:13
+e/s games.js:145:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+48 ocr.js:318:17
+Got: x games.js:40:21
+Expected: r games.js:41:21
+false games.js:42:21
+x/r games.js:124:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+38 ocr.js:318:17
+Got: x games.js:40:21
+Expected: r games.js:41:21
+false games.js:42:21
+x/r games.js:124:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+40 ocr.js:318:17
+Got: x games.js:40:21
+Expected: r games.js:41:21
+false games.js:42:21
+x/r games.js:145:13
+x/r games.js:145:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+48 ocr.js:318:17
+Got: j games.js:40:21
+Expected: j games.js:41:21
+true games.js:42:21
+j/j games.js:119:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+46 ocr.js:318:17
+Got: e games.js:40:21
+Expected: b games.js:41:21
+false games.js:42:21
+e/b games.js:124:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+49 ocr.js:318:17
+Got: e games.js:40:21
+Expected: b games.js:41:21
+false games.js:42:21
+e/b games.js:124:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+49 ocr.js:318:17
+Got: e games.js:40:21
+Expected: b games.js:41:21
+false games.js:42:21
+e/b games.js:145:13
+e/b games.js:145:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+27 ocr.js:318:17
+Got: z games.js:40:21
+Expected: z games.js:41:21
+true games.js:42:21
+z/z games.js:119:13
+Recognizing with TensorFlow.js model... ocr.js:194:17
+44 ocr.js:318:17
+Got: e games.js:40:21
+Expected: a games.js:41:21

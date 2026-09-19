@@ -24,7 +24,7 @@ function c() {}
 
 function load_1() {
     let abc = "abcdefghijklmnopqrstuvwxyz";
-    let r = _.random(0, abc.length);
+    let r = _.random(0, abc.length - 1);
     letter = abc.charAt(r);
     var letterSound = new Howl({
         src: ['sound/letters/' + letter + '.flac', 'sound/letters/' + letter + '.mp3'],

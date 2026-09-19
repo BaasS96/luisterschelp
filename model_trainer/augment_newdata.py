@@ -6,6 +6,8 @@ from PIL import Image, ImageEnhance
 SOURCE_DIR = Path(__file__).resolve().parent / "newdata"
 OUTPUT_DIR = Path(__file__).resolve().parent / "generated_from_newdata"
 VALIDATION_DIR = Path(__file__).resolve().parent / "validation_from_newdata"
+NEWEST_SOURCE_DIR = Path(__file__).resolve().parent / "newestdata"
+NEWEST_OUTPUT_DIR = Path(__file__).resolve().parent / "generated_from_newestdata"
 IMAGE_SIZE = (256, 256)
 HOLDOUTS_PER_CLASS = 1
 
@@ -42,6 +44,21 @@ def transform_image(image, name):
     raise ValueError(f"Unknown transform: {name}")
 
 
+def generate_training_images(source_paths, output_dir, transforms):
+    output_dir.mkdir(exist_ok=True)
+    for old_path in output_dir.glob("*.png"):
+        old_path.unlink()
+
+    for source_path in source_paths:
+        image = Image.open(source_path).convert("L").resize(IMAGE_SIZE, Image.Resampling.LANCZOS)
+        stem = source_path.stem
+        for transform_name in transforms:
+            output = transform_image(image, transform_name)
+            output.save(output_dir / f"{stem}_{transform_name}.png")
+
+    return len(source_paths) * len(transforms)
+
+
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True)
     VALIDATION_DIR.mkdir(exist_ok=True)
@@ -54,9 +71,7 @@ def main():
         "shift0x-8",
         "shift0x8",
         "zoom0.9",
-        "zoom1.1",
-        "contrast_low",
-        "contrast_high",
+        "zoom1.1"
     )
 
     source_paths = sorted(SOURCE_DIR.glob("*.png"))
@@ -75,8 +90,6 @@ def main():
         training_paths.extend(class_paths[:-HOLDOUTS_PER_CLASS])
         validation_paths.extend(class_paths[-HOLDOUTS_PER_CLASS:])
 
-    for old_path in OUTPUT_DIR.glob("*.png"):
-        old_path.unlink()
     for old_path in VALIDATION_DIR.glob("*.png"):
         old_path.unlink()
 
@@ -84,14 +97,19 @@ def main():
         image = Image.open(source_path).convert("L").resize(IMAGE_SIZE, Image.Resampling.LANCZOS)
         image.save(VALIDATION_DIR / source_path.name)
 
-    for source_path in training_paths:
-        image = Image.open(source_path).convert("L").resize(IMAGE_SIZE, Image.Resampling.LANCZOS)
-        stem = source_path.stem
-        for transform_name in transforms:
-            output = transform_image(image, transform_name)
-            output.save(OUTPUT_DIR / f"{stem}_{transform_name}.png")
+    generated_count = generate_training_images(training_paths, OUTPUT_DIR, transforms)
 
-    print(f"Generated {len(training_paths) * len(transforms)} training images in {OUTPUT_DIR}")
+    newest_paths = sorted(NEWEST_SOURCE_DIR.glob("*.png"))
+    if not newest_paths:
+        raise RuntimeError(f"No PNG files found in {NEWEST_SOURCE_DIR}")
+    newest_generated_count = generate_training_images(
+        newest_paths,
+        NEWEST_OUTPUT_DIR,
+        transforms,
+    )
+
+    print(f"Generated {generated_count} training images in {OUTPUT_DIR}")
+    print(f"Generated {newest_generated_count} training images in {NEWEST_OUTPUT_DIR}")
     print(f"Reserved {len(validation_paths)} validation images in {VALIDATION_DIR}")
 
 

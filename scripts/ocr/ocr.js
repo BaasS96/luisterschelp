@@ -7,20 +7,25 @@ const MODEL_IMAGE_SIZE = [256, 256];
 const MODEL_PATH = 'model_trainer/browser_model/model.json';
 
 export class OCRResult {
-    constructor(result) {
-        if (result === false) {
-            this.failed = true;
-            this.result = "";
-        } else {
-            this.failed = false;
-            this.result = result;
-        }
+    constructor(guess, confidence) {
+        this.guessedLetter = guess;
+        this.confidence = confidence;
     }
-    hasFailed() {
-        return this.failed;
+    hasFailed(letter) {
+        if (this.guessedLetter == letter) {
+            //Benefit of the doubt
+            return false;
+        } 
+        return this.confidence < 0.9;
+    }
+    isCorrect(letter) {
+        if (this.guessedLetter === letter) {
+            return true;
+        }
+        return (this.confidence >= 0.9 && this.guessedLetter === letter);
     }
     getResult() {
-        return this.result;
+        return this.guessedLetter;
     }
 }
 
@@ -166,6 +171,11 @@ export class OCR {
         }
     }
 
+    processImage(imageData) {
+        const thresholdedData = this.threshold(imageData);
+        return normalizeThresholdedImageData(thresholdedData);
+    }
+
     initCamera() {
         var t = this;
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -187,7 +197,7 @@ export class OCR {
     async recognize() {
         if (!this.modelReady) {
             console.error("Model not ready");
-            this.onrecognized(new OCRResult(false));
+            this.onrecognized(new OCRResult("", -1.0));
             return;
         }
 
@@ -195,22 +205,22 @@ export class OCR {
         this.photo = true;
 
         try {
-            const saveTarget = await this.requestPngSaveTarget();
+            //const saveTarget = await this.requestPngSaveTarget();
             const imageData = this.ctx.getImageData(0, 0, this.cw, this.ch);
             const thresholdedData = this.threshold(imageData);
             this.ctx.putImageData(thresholdedData, 0, 0);
             const normalizedData = normalizeThresholdedImageData(thresholdedData);
             const inputTensor = imageDataToModelInput(normalizedData);
-            const previewCanvas = document.createElement('canvas');
-            previewCanvas.width = 256;
-            previewCanvas.height = 256;
-            document.body.appendChild(previewCanvas);
+            // const previewCanvas = document.createElement('canvas');
+            // previewCanvas.width = 256;
+            // previewCanvas.height = 256;
+            // document.body.appendChild(previewCanvas);
 
-            await tf.browser.toPixels(
-                inputTensor.squeeze().div(255),
-                previewCanvas,
-            );
-            await this.savePng(previewCanvas, saveTarget);
+            // await tf.browser.toPixels(
+            //     inputTensor.squeeze().div(255),
+            //     previewCanvas,
+            // );
+            //await this.savePng(previewCanvas, saveTarget);
 
             const tesseractCanvas = document.createElement('canvas');
             tesseractCanvas.width = thresholdedData.width;
@@ -227,7 +237,7 @@ export class OCR {
             tf.dispose(inputTensor);
             
             // Post-process
-            const text = await this.postprocessPredictions(outputData);
+            const result = await this.postprocessPredictions(outputData);
 
             //Run recognition with tesseract.js
             // let worker = await createWorker('eng');
@@ -238,10 +248,12 @@ export class OCR {
             // })();
 
             //this.onrecognized(new OCRResult(letter));
-            this.onrecognized(new OCRResult(text));
+
+            
+            this.onrecognized(new OCRResult(result.l, result.c));
         } catch (error) {
             console.error("Recognition failed:", error);
-            this.onrecognized(new OCRResult(false));
+            this.onrecognized(new OCRResult("", -1.0));
         } finally {
             this.photo = false;
         }
@@ -302,10 +314,14 @@ export class OCR {
         const alphabet = "abcdefghijklmnopqrstuvwxyz";
     
         const outputArray = tf.tensor1d(outputData);
-        let maxconfidence = await tf.argMax(outputArray).data();
+        let maxconfidenceindex = await tf.argMax(outputArray).data();
+        let letter = alphabet[maxconfidenceindex[0]];
+        let maxconfidence = outputData[maxconfidenceindex[0]];
         tf.dispose(outputArray);
 
-        return alphabet[maxconfidence[0]];
+        console.log("Guessed letter " + letter + " with " + maxconfidence.toString() + " confidence.");
+
+        return {l: letter, c: maxconfidence};
     }
 
     threshold(d) {

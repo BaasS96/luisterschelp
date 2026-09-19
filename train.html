@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Luisterschelp - Trainingsdata maken</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/games.css">
+    <link rel="stylesheet" type="text/css" href="styles/training.css">
+    <script src="scripts/functions.js"></script>
+    <script src="scripts/howler-min.js"></script>
+    <script src="scripts/ocr/dist/ocr-bundle.umd.js"></script>
+    <script src="scripts/training.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0288D1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+
+<body onload="setVolumeOnLoad();">
+    <div id="header">
+        <a href="index.html">
+            <img src="images/ic_home_gray_48dp.png" id="homebttn" />
+        </a>
+        <div id="volholder">
+            <img src="images/ic_volume_mute_white_48dp.png" id="vollow" onclick="setVolume('0.1','vollow');" />
+            <img src="images/ic_volume_down_white_48dp.png" id="volmid" onclick="setVolume('0.6','volmid');" />
+            <img src="images/ic_volume_up_white_48dp.png" id="volhigh" onclick="setVolume('1','volhigh');" />
+        </div>
+    </div>
+
+    <main id="training-workarea">
+        <section id="training-intro" class="training-panel">
+            <img src="images/ic_camera_alt_white_48dp.png" class="feedback_IMG" alt="">
+            <span class="feedback_text">maak trainingsdata</span>
+            <p class="training-copy">Schrijf elke letter in beeld. Na eenmalig kiezen van een map worden de foto's automatisch bewaard.</p>
+            <button type="button" class="training-button" id="start-training">start</button>
+            <p class="training-status" id="training-intro-status"></p>
+        </section>
+
+        <section id="training-capture" class="training-panel" hidden>
+            <div class="training-progress" id="training-progress">letter 1 van 26</div>
+            <div class="training-letter" id="training-letter">a</div>
+            <p class="training-prompt">Schrijf deze letter en maak een foto.</p>
+            <div class="training-camera">
+                <video id="training-video" autoplay playsinline></video>
+                <canvas id="training-canvas"></canvas>
+            </div>
+            <div class="training-actions">
+                <button type="button" class="training-button" id="capture-training">maak foto</button>
+                <button type="button" class="training-button training-button-secondary" id="choose-folder">kies map</button>
+            </div>
+            <p class="training-status" id="training-status"></p>
+            <img id="training-preview" alt="Verwerkte opname" hidden>
+        </section>
+
+        <section id="training-done" class="training-panel" hidden>
+            <span class="feedback_text">klaar</span>
+            <p class="training-copy">Alle letters zijn bewaard als trainingsdata.</p>
+            <a class="training-button training-link" href="index.html">terug naar het menu</a>
+        </section>
+    </main>
+</body>
+
+</html>

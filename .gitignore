@@ -35,10 +35,10 @@ model_trainer/processed
 model_trainer/luisterschelp3_saved_model
 model_trainer/luisterschelppack
 model_trainer/newdata
-model_trainer/browser_model
-model_trainer/browser_saved_model
 model_trainer/generated_from_newdata
 model_trainer/validation_from_newdata
+model_trainer/newestdata
+model_trainer/generated_from_newestdata
 
 
 # Editors and IDEs

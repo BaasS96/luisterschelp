@@ -1,0 +1,115 @@
+#training-workarea {
+    min-height: 100vh;
+    padding: 5em 1em 2em;
+    box-sizing: border-box;
+    background-color: #03A9F4;
+    text-align: center;
+}
+
+.training-panel {
+    min-height: calc(100vh - 7em);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.training-panel[hidden] {
+    display: none;
+}
+
+.training-copy,
+.training-prompt,
+.training-status {
+    max-width: 34em;
+    margin: 0.75em auto;
+    color: #FFFFFF;
+    font-size: 1.35em;
+}
+
+.training-progress {
+    color: #FFFFFF;
+    font-size: 1.5em;
+}
+
+.training-letter {
+    color: #FFFFFF;
+    font-size: min(30vh, 14em);
+    line-height: 1;
+}
+
+.training-camera {
+    position: relative;
+    width: min(92vw, 720px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    background-color: #0288D1;
+    border: 5px solid #0288D1;
+}
+
+#training-video,
+#training-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#training-canvas {
+    opacity: 0;
+}
+
+.training-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.25em;
+}
+
+.training-button {
+    padding: 0.55em 1.2em;
+    color: #FFFFFF;
+    background-color: #0288D1;
+    border: 0;
+    font: inherit;
+    font-size: 1.35em;
+    cursor: pointer;
+}
+
+.training-button:hover,
+.training-button:focus {
+    background-color: #468aff;
+}
+
+.training-button:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.training-button-secondary {
+    background-color: #0277BD;
+}
+
+.training-link {
+    text-decoration: none;
+}
+
+#training-preview {
+    width: min(30vw, 160px);
+    margin-top: 1em;
+    image-rendering: pixelated;
+}
+
+@media (max-width: 600px) {
+    .training-copy,
+    .training-prompt,
+    .training-status {
+        font-size: 1.1em;
+    }
+
+    .training-actions {
+        gap: 0.5em;
+    }
+}

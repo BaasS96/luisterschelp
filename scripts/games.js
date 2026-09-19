@@ -26,7 +26,7 @@ async function gameLetterStep3() {
     document.getElementById("step3").style.display = "block";
     document.getElementById("progressbar").style.width = "66%";
     let func = function(res) {
-        if (res.hasFailed()) {
+        if (res.hasFailed(letter)) {
             var soundIntFail = new Howl({
                 src: ['sound/beep_intfail.flac', 'sound/beep_intfail.mp3'],
                 volume: 1
@@ -36,11 +36,10 @@ async function gameLetterStep3() {
             setTimeout(function(){ document.getElementById("bttn_control").src = "images/ic_photo_camera_white_72dp.png"; }, 3000);
         }
         else {
-            var result = res.getResult().charAt(0);
-            console.log("Got: " + result);
+            var result = res.getResult();
+            console.log("Got: " + res.getResult());
             console.log("Expected: " + letter);
-            console.log(result == letter);
-            if (result == letter) {
+            if (res.isCorrect(letter)) {
                 ocr.videostream.getTracks()[0].stop();
                 let soundGood = new Howl({
                     src: ['sound/beep_good.flac', 'sound/beep_good.mp3'],
@@ -116,12 +115,10 @@ function gameLetterStep4(result) {
         }
     });
     letterSound.play();
-    console.log(result + "/" + letter);
 }
 function gameLetterStep5(result) {
     document.getElementById("step3").style.display = "none";
     document.getElementById("step5").style.display = "block";
-    console.log(result + "/" + letter);
 }
 function gameLetterStep6(result) {
     document.getElementById("step4").style.display = "none";
@@ -181,7 +178,7 @@ async function gameKlankStep3() {
     document.getElementById("step3").style.display = "block";
     document.getElementById("progressbar").style.width = "66%";
     let func = function(res) {
-        if (res.hasFailed()) {
+        if (res.hasFailed(letter)) {
             var soundIntFail = new Howl({
                 src: ['sound/beep_intfail.flac', 'sound/beep_intfail.mp3'],
                 volume: 1
@@ -192,7 +189,9 @@ async function gameKlankStep3() {
         }
         else {
             var result = res.getResult();
-            if (result === letter) {
+            console.log("Got: " + res.getResult());
+            console.log("Expected: " + letter);
+            if (res.isCorrect(letter)) {
                 ocr.videostream.getTracks()[0].stop();
                 let soundGood = new Howl({
                     src: ['sound/beep_good.flac', 'sound/beep_good.mp3'],

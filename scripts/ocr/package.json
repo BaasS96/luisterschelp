@@ -13,9 +13,8 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "@litertjs/core": "^2.5.3",
-    "@litertjs/tfjs-interop": "^2.5.3",
     "@tensorflow/tfjs": "^4.22.0",
-    "@tensorflow/tfjs-backend-webgpu": "^4.22.0"
+    "@tensorflow/tfjs-backend-webgpu": "^4.22.0",
+    "tesseract.js": "^7.0.0"
   }
 }

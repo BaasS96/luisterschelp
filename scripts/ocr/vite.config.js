@@ -7,6 +7,7 @@ export default defineConfig({
       name: 'OCRModule',
       fileName: (format) => `ocr-bundle.${format === 'es' ? 'js' : 'umd.js'}`
     },
+    sourcemap: true,
     outDir: './dist',
     rollupOptions: {
       output: {

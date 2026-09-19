@@ -1,14 +1,9 @@
 import * as tf from '@tensorflow/tfjs';
-import {loadLiteRt, getWebGpuDevice} from '@litertjs/core';
-import {runWithTfjsTensors} from '@litertjs/tfjs-interop';
-import {WebGPUBackend} from '@tensorflow/tfjs-backend-webgpu'
+import '@tensorflow/tfjs-backend-webgpu';
 
 // Model configuration
 const MODEL_IMAGE_SIZE = [256, 256]; // Updated to 256x256
-const MODEL_PATH = 'model_trainer/model.tflite';
-
-//SHOULD BE UPDATED IF/WHEN YOU UPDATE LiteRT
-const WASM_PATH = 'scripts/ocr/dist/wasm';
+const MODEL_PATH = 'model_trainer/luisterschelp3_saved_model/model.json';
 
 export class OCRResult {
     constructor(result) {
@@ -35,11 +30,9 @@ function imageDataToModelInput(imageData) {
             [imageData.height, imageData.width, 4],
             'int32',
         );
-        const rgb = rgba.slice([0, 0, 0], [-1, -1, 3]);
-        const grayscale = tf.sum(
-            rgb.mul(tf.tensor1d([0.2126, 0.7152, 0.0722])).toFloat(),
-            2,
-        ).expandDims(-1);
+
+        const grayscale = rgba
+            .slice([0, 0, 0], [-1, -1, 1]);
 
         const resized = tf.image.resizeBilinear(grayscale, MODEL_IMAGE_SIZE, false);
         
@@ -53,7 +46,6 @@ var ctx, drawImage;
 export class OCR {
     constructor(word) {
         this.word = word;
-        this.liteRt = null;
         this.model = null;
         this.modelReady = false;
     }
@@ -86,54 +78,26 @@ export class OCR {
         this.backcam = undefined;
         this.onrecognized = onrecognized;
         
-        // Initialize TensorFlow.js
+        // Initialize TensorFlow.js and use WebGPU when it is available.
         await tf.ready();
-        await tf.setBackend('webgpu');
-        
-        // Initialize LiteRT with WASM
-        await this.initializeLiteRT();
-
-        const device = getWebGpuDevice();
-        tf.removeBackend('webgpu');
-        tf.registerBackend('webgpu', () => new WebGPUBackend(device, device.adapterInfo));
-        await tf.setBackend('webgpu');
+        try {
+            await tf.setBackend('webgpu');
+        } catch (error) {
+            console.warn('WebGPU not available, falling back to WebGL:', error.message);
+            await tf.setBackend('webgl');
+        }
         
         // Load model
         await this.loadModel();
     }
 
-    async initializeLiteRT() {
-        try {
-            // Initialize LiteRT with WASM support
-            this.liteRt = await loadLiteRt(WASM_PATH)
-            
-            console.log("LiteRT.js initialized with WASM support");
-        } catch (error) {
-            console.error("Failed to initialize LiteRT.js:", error);
-            throw error;
-        }
-    }
-
     async loadModel() {
         try {
-            // Load and compile model with accelerator (try WebGPU first, fallback to WASM)
-            try {
-                this.model = await this.liteRt.loadAndCompile(MODEL_PATH, {
-                    accelerator: 'webgpu'
-                });
-                console.log("Model loaded with WebGPU acceleration");
-            } catch (webGpuError) {
-                console.warn("WebGPU not available, falling back to WASM:", webGpuError.message);
-                this.model = await this.liteRt.loadAndCompile(MODEL_PATH, {
-                    accelerator: 'wasm'
-                });
-                console.log("Model loaded with WASM acceleration");
-            }
-            
+            this.model = await tf.loadGraphModel(MODEL_PATH);
             this.modelReady = true;
             console.log("OCR model loaded successfully");
-            console.log("Input details:", this.model.getInputDetails());
-            console.log("Output details:", this.model.getOutputDetails());
+            console.log("Input details:", this.model.inputs);
+            console.log("Output details:", this.model.outputs);
         } catch (error) {
             console.error("Failed to load OCR model:", error);
             this.modelReady = false;
@@ -159,14 +123,6 @@ export class OCR {
         }
     }
 
-    tresholdimage() {
-        this.photo = true;
-        let img = document.getElementById("text");
-        this.ctx.drawImage(img, 0, 0, this.cw, this.ch);
-        let data = this.ctx.getImageData(0, 0, this.cw, this.ch);
-        this.ctx.putImageData(data, 0, 0);
-    }
-
     async recognize() {
         if (!this.modelReady) {
             console.error("Model not ready");
@@ -174,16 +130,28 @@ export class OCR {
             return;
         }
 
-        console.log("recognizing with LiteRT.js model...");
+        console.log("Recognizing with TensorFlow.js model...");
         this.photo = true;
 
         try {
             const imageData = this.ctx.getImageData(0, 0, this.cw, this.ch);
-            const inputTensor = imageDataToModelInput(imageData);
-            
-            // Run inference with LiteRT
-            const outputs = await runWithTfjsTensors(this.model, [inputTensor]);
-            const outputData = await outputs[0].data();
+            let tresholdedData = this.threshold(imageData);
+            this.ctx.putImageData(tresholdedData, 0, 0);
+            const inputTensor = imageDataToModelInput(tresholdedData);
+            const previewCanvas = document.createElement('canvas');
+            previewCanvas.width = 256;
+            previewCanvas.height = 256;
+            document.body.appendChild(previewCanvas);
+
+            await tf.browser.toPixels(
+                inputTensor.squeeze().div(255),
+                previewCanvas,
+            );
+
+            // Run inference with TensorFlow.js.
+            const outputs = this.model.execute(inputTensor);
+            const outputTensor = Array.isArray(outputs) ? outputs[0] : outputs;
+            const outputData = await outputTensor.data();
             
             // Clean up
             tf.dispose(outputs);
@@ -212,49 +180,76 @@ export class OCR {
         return alphabet[maxconfidence[0]];
     }
 
+    threshold(d) {
+        var imageData = d.data;
+        //Treshold the image to get a contrasted image.
+        //First, calculate the histogram
+        let hist = this.getHistogram(imageData);
+        //Using the histogram, calculate the appropriate treshold to separate the image in back and forground
+        var threshold = this.otus(hist, imageData.length / 4);
+        console.log(threshold);
+        //Apply the treshold
+        var newIData = imageData;
+        for (var i = 0; i < newIData.length; i += 4) {
+            if (newIData[i] >= threshold) {
+                newIData[i] = 255;
+                newIData[i + 1] = 255;
+                newIData[i + 2] = 255;
+            } else {
+                newIData[i] = 0;
+                newIData[i + 1] = 0;
+                newIData[i + 2] = 0;
+            }
+        }
+        d.data.set(newIData);
+        return d;
+    }
+
+    getHistogram(data) {
+        let histogram = Array(256);
+        for (var i = 0; i < 256; i++) {
+            histogram[i] = 0;
+        }
+        for (var i = 0; i < data.length; i += 4) {
+            let red = data[i];
+            let blue = data[i + 1];
+            let green = data[i + 2];
+            let gray = red * .2126 + green * .07152 + blue * .0722;
+            gray = Math.round(gray);
+            histogram[gray] += 1;
+        }
+        return histogram;
+    }
+
+    otus(histData, total) {
+        let sum = 0;
+        for (let t = 0; t < 256; t++) sum += t * histData[t];
+        let sumB = 0;
+        let wB = 0;
+        let wF = 0;
+        let varMax = 0;
+        let threshold = 0;
+        for (let t = 0; t < 256; t++) {
+            wB += histData[t];
+            if (wB == 0) continue;
+            wF = total - wB;
+            if (wF == 0) break;
+            sumB += t * histData[t];
+            let mB = sumB / wB;
+            let mF = (sum - sumB) / wF;
+            let varBetween = wB * wF * (mB - mF) * (mB - mF);
+            if (varBetween > varMax) {
+                varMax = varBetween;
+                threshold = t;
+            }
+        }
+        return threshold;
+    }
+
     draw(v, x, y, w, h, c) {
         if (!this.photo) {
             ctx.drawImage(v, x, y, w, h);
         }
     }
 
-    confidence(rawtext) {
-        if (rawtext.length === 0) { return false; }
-        let answer = "";
-        let charcount = 0;
-        let letters = "",
-            i = 0,
-            abc = "abcdefghijklmnopqrstuvwxyz",
-            exceptioncharacters = "!\/\\015",
-            charsforI = "!\/\\1";
-        
-        for (i = 0; i <= rawtext.length; i++) {
-            let char = rawtext.charAt(i).toLowerCase();
-            if (abc.indexOf(char) !== -1) {
-                letters += char;
-                continue;
-            }
-            if (exceptioncharacters.indexOf(char) !== -1 && rawtext.length <= 3) {
-                if (charsforI.indexOf(char) !== -1) {
-                    letters += "i";
-                } else if (char === "0") {
-                    letters += "o";
-                } else {
-                    letters += "s";
-                }
-                continue;
-            }
-            charcount++;
-        }
-        
-        if (letters.length > 5 && !this.word) {
-            return false;
-        } else {
-            if (charcount > 5) {
-                return false;
-            }
-            answer = this.word ? letters : letters.charAt(0);
-        }
-        return answer;
-    }
 }

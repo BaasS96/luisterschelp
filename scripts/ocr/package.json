@@ -13,8 +13,7 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^4.22.0",
-    "@tensorflow/tfjs-backend-webgpu": "^4.22.0",
-    "tesseract.js": "^7.0.0"
+    "@ericblade/quagga2": "^1.12.1",
+    "@undecaf/zbar-wasm": "^0.11.0"
   }
 }

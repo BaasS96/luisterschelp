@@ -24,17 +24,6 @@ export interface DecodedCharacter {
   barIndices: number[];
 }
 
-export interface KixAddressInfo {
-  isValidPostNL: boolean;
-  postalCode?: string; // e.g. "2514 EJ"
-  postalDigits?: string; // "2514"
-  postalLetters?: string; // "EJ"
-  houseNumber?: string; // "28"
-  addition?: string; // "A", "bis", etc.
-  formattedAddress?: string; // "2514 EJ, 28"
-  cityHint?: string; // e.g. "The Hague / 's-Gravenhage"
-}
-
 export interface KixDecodeResult {
   success: boolean;
   rawText: string;
@@ -42,7 +31,6 @@ export interface KixDecodeResult {
   bars: DetectedBar[];
   characters: DecodedCharacter[];
   boundingBox?: BoundingBox;
-  addressInfo: KixAddressInfo;
   confidence: number;
   rotation: number;
   latencyMs: number;

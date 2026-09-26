@@ -1,10 +1,6 @@
-import * as tf from '@tensorflow/tfjs';
-import '@tensorflow/tfjs-backend-webgpu';
-//import { createWorker } from 'tesseract.js';
+import { scanKixBarcodeFromImage } from "../scanner/kixDecoder";
 
-// Model configuration
-const MODEL_IMAGE_SIZE = [256, 256];
-const MODEL_PATH = 'model_trainer/browser_model/model.json';
+var ctx, drawImage;
 
 export class OCRResult {
     constructor(guess, confidence) {
@@ -28,86 +24,6 @@ export class OCRResult {
         return this.guessedLetter;
     }
 }
-
-function imageDataToModelInput(imageData) {
-    return tf.tidy(() => {
-        const rgba = tf.tensor(
-            imageData.data,
-            [imageData.height, imageData.width, 4],
-            'int32',
-        );
-
-        const grayscale = rgba
-            .slice([0, 0, 0], [-1, -1, 1]);
-
-        const resized = tf.image.resizeBilinear(grayscale, MODEL_IMAGE_SIZE, false);
-        
-        // Use reshape with -1 to let TensorFlow infer batch dimension
-        return resized.reshape([-1, 256, 256, 1]);
-    });
-}
-
-function normalizeThresholdedImageData(imageData) {
-    const { data, width, height } = imageData;
-    let minX = width;
-    let minY = height;
-    let maxX = -1;
-    let maxY = -1;
-
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            if (data[(y * width + x) * 4] < 128) {
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                maxX = Math.max(maxX, x);
-                maxY = Math.max(maxY, y);
-            }
-        }
-    }
-
-    if (maxX < 0) {
-        return imageData;
-    }
-
-    const foregroundWidth = maxX - minX + 1;
-    const foregroundHeight = maxY - minY + 1;
-    const padding = Math.round(Math.max(foregroundWidth, foregroundHeight) * 0.15);
-    const cropSize = Math.max(foregroundWidth, foregroundHeight) + padding * 2;
-    const centerX = (minX + maxX) / 2;
-    const centerY = (minY + maxY) / 2;
-    const cropLeft = Math.max(0, Math.min(width - cropSize, Math.round(centerX - cropSize / 2)));
-    const cropTop = Math.max(0, Math.min(height - cropSize, Math.round(centerY - cropSize / 2)));
-
-    const sourceCanvas = document.createElement('canvas');
-    sourceCanvas.width = width;
-    sourceCanvas.height = height;
-    const sourceContext = sourceCanvas.getContext('2d');
-    sourceContext.fillStyle = 'white';
-    sourceContext.fillRect(0, 0, width, height);
-    sourceContext.putImageData(imageData, 0, 0);
-
-    const normalizedCanvas = document.createElement('canvas');
-    normalizedCanvas.width = 256;
-    normalizedCanvas.height = 256;
-    const normalizedContext = normalizedCanvas.getContext('2d');
-    normalizedContext.fillStyle = 'white';
-    normalizedContext.fillRect(0, 0, 256, 256);
-    normalizedContext.drawImage(
-        sourceCanvas,
-        cropLeft,
-        cropTop,
-        cropSize,
-        cropSize,
-        0,
-        0,
-        256,
-        256,
-    );
-
-    return normalizedContext.getImageData(0, 0, 256, 256);
-}
-
-var ctx, drawImage;
 
 export class OCR {
     constructor(word) {
@@ -143,37 +59,7 @@ export class OCR {
         this.photo = false;
         this.backcam = undefined;
         this.onrecognized = onrecognized;
-        
-        // Initialize TensorFlow.js and use WebGPU when it is available.
-        await tf.ready();
-        try {
-            await tf.setBackend('webgpu');
-        } catch (error) {
-            console.warn('WebGPU not available, falling back to WebGL:', error.message);
-            await tf.setBackend('webgl');
-        }
-        
-        // Load model
-        await this.loadModel();
-    }
-
-    async loadModel() {
-        try {
-            this.model = await tf.loadGraphModel(MODEL_PATH);
-            this.modelReady = true;
-            console.log("OCR model loaded successfully");
-            console.log("Input details:", this.model.inputs);
-            console.log("Output details:", this.model.outputs);
-        } catch (error) {
-            console.error("Failed to load OCR model:", error);
-            this.modelReady = false;
-            throw error;
-        }
-    }
-
-    processImage(imageData) {
-        const thresholdedData = this.threshold(imageData);
-        return normalizeThresholdedImageData(thresholdedData);
+    
     }
 
     initCamera() {
@@ -195,199 +81,64 @@ export class OCR {
     }
 
     async recognize() {
-        if (!this.modelReady) {
-            console.error("Model not ready");
-            this.onrecognized(new OCRResult("", -1.0));
-            return;
-        }
-
-        console.log("Recognizing with TensorFlow.js model...");
+        console.log("Finding barcodes");
         this.photo = true;
 
         try {
-            //const saveTarget = await this.requestPngSaveTarget();
-            const imageData = this.ctx.getImageData(0, 0, this.cw, this.ch);
-            const thresholdedData = this.threshold(imageData);
-            this.ctx.putImageData(thresholdedData, 0, 0);
-            const normalizedData = normalizeThresholdedImageData(thresholdedData);
-            const inputTensor = imageDataToModelInput(normalizedData);
-            // const previewCanvas = document.createElement('canvas');
-            // previewCanvas.width = 256;
-            // previewCanvas.height = 256;
-            // document.body.appendChild(previewCanvas);
+            const imageDataRaw = this.ctx.getImageData(0, 0, this.cw, this.ch);
+            //const thresholdedData = this.threshold(imageDataRaw);
+            //this.ctx.putImageData(thresholdedData, 0, 0);
+            const imageData = this.canvas.toDataURL();
 
-            // await tf.browser.toPixels(
-            //     inputTensor.squeeze().div(255),
-            //     previewCanvas,
+            const previewCanvas = document.createElement('canvas');
+            previewCanvas.width = 256;
+            previewCanvas.height = 256;
+            const previewSource = document.createElement('canvas');
+            previewSource.width = imageDataRaw.width;
+            previewSource.height = imageDataRaw.height;
+            previewSource.getContext("2d").putImageData(imageDataRaw, 0, 0);
+            previewCanvas.getContext("2d").drawImage(
+                previewSource,
+                0,
+                0,
+                previewCanvas.width,
+                previewCanvas.height
+            );
+            document.body.appendChild(previewCanvas);
+            
+            let result = await scanKixBarcodeFromImage(this.canvas);
+            if (result && result.success) {
+                this.onrecognized(new OCRResult(this.extractLetterFromPostcode(result.rawText), 1.0));
+            } else {
+                this.onrecognized(new OCRResult("", -1.0));
+            }
+
+            // Quagga.decodeSingle({
+            //     src: imageData,
+            //     locate: true,
+            //     decoder: {
+            //         readers: ["ean_reader"]
+            //     }
+            //     }, result => {
+            //         if (result && result.codeResult) {
+            //             console.log(result);
+            //             this.onrecognized(new OCRResult(result.codeResult.code, 1.0));
+            //         } else {
+            //             this.onrecognized(new OCRResult("", -1.0));
+            //         }
+            //     }
             // );
-            //await this.savePng(previewCanvas, saveTarget);
-
-            const tesseractCanvas = document.createElement('canvas');
-            tesseractCanvas.width = thresholdedData.width;
-            tesseractCanvas.height = thresholdedData.height;
-            tesseractCanvas.getContext('2d').putImageData(thresholdedData, 0, 0);
-
-            // Run inference with TensorFlow.js.
-            const outputs = this.model.execute(inputTensor);
-            const outputTensor = Array.isArray(outputs) ? outputs[0] : outputs;
-            const outputData = await outputTensor.data();
-            
-            // Clean up
-            tf.dispose(outputs);
-            tf.dispose(inputTensor);
-            
-            // Post-process
-            const result = await this.postprocessPredictions(outputData);
-
-            //Run recognition with tesseract.js
-            // let worker = await createWorker('eng');
-            // let letter = await (async() => {
-            //     const { data: { text } } = await worker.recognize(tesseractCanvas);
-            //     await worker.terminate();
-            //     return text.toLowerCase();
-            // })();
-
-            //this.onrecognized(new OCRResult(letter));
-
-            
-            this.onrecognized(new OCRResult(result.l, result.c));
         } catch (error) {
             console.error("Recognition failed:", error);
             this.onrecognized(new OCRResult("", -1.0));
         } finally {
-            this.photo = false;
+            //this.photo = false;
         }
     }
 
-    async requestPngSaveTarget() {
-        if (!window.showSaveFilePicker) {
-            return null;
-        }
-
-        try {
-            return await window.showSaveFilePicker({
-                suggestedName: `ocr-${new Date().toISOString().replace(/[:.]/g, '-')}.png`,
-                types: [{
-                    description: 'PNG image',
-                    accept: { 'image/png': ['.png'] },
-                }],
-            });
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                return { cancelled: true };
-            }
-            throw error;
-        }
-    }
-
-    async savePng(canvas, saveTarget) {
-        if (saveTarget && saveTarget.cancelled) {
-            return;
-        }
-
-        const blob = await new Promise((resolve, reject) => {
-            canvas.toBlob((result) => {
-                if (result) {
-                    resolve(result);
-                } else {
-                    reject(new Error('Could not encode the image as PNG'));
-                }
-            }, 'image/png');
-        });
-
-        if (saveTarget) {
-            const writable = await saveTarget.createWritable();
-            await writable.write(blob);
-            await writable.close();
-            return;
-        }
-
-        const download = document.createElement('a');
-        download.href = URL.createObjectURL(blob);
-        download.download = `ocr-${Date.now()}.png`;
-        download.click();
-        URL.revokeObjectURL(download.href);
-    }
-
-   async postprocessPredictions(outputData) {
-        // Adjust based on your model's output format
-        const alphabet = "abcdefghijklmnopqrstuvwxyz";
-    
-        const outputArray = tf.tensor1d(outputData);
-        let maxconfidenceindex = await tf.argMax(outputArray).data();
-        let letter = alphabet[maxconfidenceindex[0]];
-        let maxconfidence = outputData[maxconfidenceindex[0]];
-        tf.dispose(outputArray);
-
-        console.log("Guessed letter " + letter + " with " + maxconfidence.toString() + " confidence.");
-
-        return {l: letter, c: maxconfidence};
-    }
-
-    threshold(d) {
-        var imageData = d.data;
-        //Treshold the image to get a contrasted image.
-        //First, calculate the histogram
-        let hist = this.getHistogram(imageData);
-        //Using the histogram, calculate the appropriate treshold to separate the image in back and forground
-        var threshold = this.otus(hist, imageData.length / 4);
-        console.log(threshold);
-        //Apply the treshold
-        var newIData = imageData;
-        for (var i = 0; i < newIData.length; i += 4) {
-            if (newIData[i] >= threshold) {
-                newIData[i] = 255;
-                newIData[i + 1] = 255;
-                newIData[i + 2] = 255;
-            } else {
-                newIData[i] = 0;
-                newIData[i + 1] = 0;
-                newIData[i + 2] = 0;
-            }
-        }
-        d.data.set(newIData);
-        return d;
-    }
-
-    getHistogram(data) {
-        let histogram = Array(256);
-        for (var i = 0; i < 256; i++) {
-            histogram[i] = 0;
-        }
-        for (var i = 0; i < data.length; i += 4) {
-            let red = data[i];
-            let blue = data[i + 1];
-            let green = data[i + 2];
-            let gray = red * .2126 + green * .07152 + blue * .0722;
-            gray = Math.round(gray);
-            histogram[gray] += 1;
-        }
-        return histogram;
-    }
-
-    otus(histData, total) {
-        let sum = 0;
-        for (let t = 0; t < 256; t++) sum += t * histData[t];
-        let sumB = 0;
-        let wB = 0;
-        let wF = 0;
-        let varMax = 0;
-        let threshold = 0;
-        for (let t = 0; t < 256; t++) {
-            wB += histData[t];
-            if (wB == 0) continue;
-            wF = total - wB;
-            if (wF == 0) break;
-            sumB += t * histData[t];
-            let mB = sumB / wB;
-            let mF = (sum - sumB) / wF;
-            let varBetween = wB * wF * (mB - mF) * (mB - mF);
-            if (varBetween > varMax) {
-                varMax = varBetween;
-                threshold = t;
-            }
-        }
-        return threshold;
+    extractLetterFromPostcode(raw) {
+        console.log(raw);
+        return raw.charAt(4).toLowerCase();
     }
 
     draw(v, x, y, w, h, c) {

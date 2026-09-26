@@ -85,54 +85,17 @@ export class OCR {
         this.photo = true;
 
         try {
-            const imageDataRaw = this.ctx.getImageData(0, 0, this.cw, this.ch);
-            //const thresholdedData = this.threshold(imageDataRaw);
-            //this.ctx.putImageData(thresholdedData, 0, 0);
-            const imageData = this.canvas.toDataURL();
-
-            const previewCanvas = document.createElement('canvas');
-            previewCanvas.width = 256;
-            previewCanvas.height = 256;
-            const previewSource = document.createElement('canvas');
-            previewSource.width = imageDataRaw.width;
-            previewSource.height = imageDataRaw.height;
-            previewSource.getContext("2d").putImageData(imageDataRaw, 0, 0);
-            previewCanvas.getContext("2d").drawImage(
-                previewSource,
-                0,
-                0,
-                previewCanvas.width,
-                previewCanvas.height
-            );
-            document.body.appendChild(previewCanvas);
-            
             let result = await scanKixBarcodeFromImage(this.canvas);
             if (result && result.success) {
                 this.onrecognized(new OCRResult(this.extractLetterFromPostcode(result.rawText), 1.0));
             } else {
                 this.onrecognized(new OCRResult("", -1.0));
             }
-
-            // Quagga.decodeSingle({
-            //     src: imageData,
-            //     locate: true,
-            //     decoder: {
-            //         readers: ["ean_reader"]
-            //     }
-            //     }, result => {
-            //         if (result && result.codeResult) {
-            //             console.log(result);
-            //             this.onrecognized(new OCRResult(result.codeResult.code, 1.0));
-            //         } else {
-            //             this.onrecognized(new OCRResult("", -1.0));
-            //         }
-            //     }
-            // );
         } catch (error) {
             console.error("Recognition failed:", error);
             this.onrecognized(new OCRResult("", -1.0));
         } finally {
-            //this.photo = false;
+            this.photo = false;
         }
     }
 
@@ -142,9 +105,19 @@ export class OCR {
     }
 
     draw(v, x, y, w, h, c) {
-        if (!this.photo) {
-            ctx.drawImage(v, x, y, w, h);
+        if (this.photo || !v.videoWidth || !v.videoHeight) {
+            return;
         }
+    
+        const cropSize = Math.min(v.videoWidth, v.videoHeight);
+        const sourceX = (v.videoWidth - cropSize) / 2;
+        const sourceY = (v.videoHeight - cropSize) / 2;
+    
+        c.drawImage(
+            v,
+            sourceX, sourceY, cropSize, cropSize,
+            x, y, w, h
+        );
     }
 
 }
